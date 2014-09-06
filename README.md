@@ -14,7 +14,7 @@ keemei's validation rules are based on QIIME's [metadata mapping file format des
 
 ## Installation
 
-Once an initial release is published, keimei will be installable as a Google Sheets [add-on](https://developers.google.com/apps-script/add-ons/). Installation and usage instructions will be provided at that time.
+Once an initial release is published, keemei will be installable as a Google Sheets [add-on](https://developers.google.com/apps-script/add-ons/). Installation and usage instructions will be provided at that time.
 
 ## Getting help
 

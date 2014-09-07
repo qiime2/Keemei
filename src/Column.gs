@@ -1,20 +1,21 @@
-function markDuplicates(sheet, column) {
-  var duplicates = findDuplicates(sheet, column);
+function markDuplicates_(sheet, column) {
+  var duplicates = findDuplicates_(sheet, column);
 
   for (var i = 0; i < duplicates.length; i++) {
     var duplicate = duplicates[i];
     var cell = sheet.getRange(duplicate.row, duplicate.column);
-    markCell(cell, Status.ERROR, "Duplicate cell");
+    markCell_(cell, Status.ERROR, "Duplicate cell");
   }
 };
 
-function findDuplicates(sheet, column) {
-  var valuePositions = getValuePositions(sheet, column);
+function findDuplicates_(sheet, column) {
+  var range = getColumnDataRange_(sheet, column);
+  var valueToPositions = getValueToPositionsMapping_(range);
   
   var duplicates = [];
-  for (var key in valuePositions) {
-    if (valuePositions.hasOwnProperty(key)) {
-      var positions = valuePositions[key];
+  for (var key in valueToPositions) {
+    if (valueToPositions.hasOwnProperty(key)) {
+      var positions = valueToPositions[key];
       
       if (positions.length > 1) {
         duplicates = duplicates.concat(positions);
@@ -25,33 +26,9 @@ function findDuplicates(sheet, column) {
   return duplicates;
 };
 
-function getValuePositions(sheet, column) {
-  var rows = getColumnDataRange(sheet, column);
-  var numRows = rows.getNumRows();
-  var values = rows.getValues();
-  
-  var valuePositions = {};
-  for (var i = 0; i < numRows; i++) {
-    var value = values[i][0];
-    var position = {
-      row: rows.getRow() + i,
-      column: column
-    };
-    
-    if (valuePositions.hasOwnProperty(value)) {
-      valuePositions[value].push(position);
-    }
-    else {
-      valuePositions[value] = [position]; 
-    }
-  }
-  
-  return valuePositions;
-};
-
-function markInvalidCells(sheet, column, regex, invalidCharactersStatus,
-                          emptyCellStatus, label, messageSuffix) {
-  var invalids = findInvalidCells(sheet, column, regex);
+function markInvalidCells_(sheet, column, regex, invalidCharactersStatus,
+                           emptyCellStatus, label, messageSuffix) {
+  var invalids = findInvalidCells_(sheet, column, regex);
 
   for (var i = 0; i < invalids.length; i++) {
     var invalid = invalids[i];
@@ -67,19 +44,19 @@ function markInvalidCells(sheet, column, regex, invalidCharactersStatus,
     }
 
     var cell = sheet.getRange(invalid.row, invalid.column);
-    markCell(cell, status, msg);
+    markCell_(cell, status, msg);
   }
 };
 
-function findInvalidCells(sheet, column, regex) {
-  var rows = getColumnDataRange(sheet, column);
+function findInvalidCells_(sheet, column, regex) {
+  var rows = getColumnDataRange_(sheet, column);
   var numRows = rows.getNumRows();
   var values = rows.getValues();
   
   var invalidPositions = [];
   for (var i = 0; i < numRows; i++) {
     var value = values[i][0];
-    var status = validateCell(value, regex);
+    var status = validateCell_(value, regex);
     
     if (!status.valid) {
       var position = {
@@ -94,7 +71,7 @@ function findInvalidCells(sheet, column, regex) {
   return invalidPositions;
 };
 
-function validateCell(value, regex) {
+function validateCell_(value, regex) {
   var valid = false;
   var invalidChars = "";
   

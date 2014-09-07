@@ -1,8 +1,8 @@
-function validateHeader(sheet) {
-  var headerRange = getHeaderRange(sheet);
-  resetRange(headerRange);
+function validateHeader_(sheet) {
+  var headerRange = getHeaderRange_(sheet);
+  resetRange_(headerRange);
   
-  var headerLocations = getHeaderLocations(headerRange);
+  var headerLocations = getValueToPositionsMapping_(headerRange);
   var requiredHeaders = {
     "#SampleID": [1, "first"],
     "BarcodeSequence": [2, "second"],
@@ -22,7 +22,7 @@ function validateHeader(sheet) {
   if (missingHeaders.length > 0) {
     var topLeftCell = headerRange.getCell(1, 1);
     var message = "Missing required columns: " + missingHeaders.join(", ");
-    markCell(topLeftCell, Status.ERROR, message);
+    markCell_(topLeftCell, Status.ERROR, message);
   }
   
   for (var header in headerLocations) {
@@ -31,9 +31,9 @@ function validateHeader(sheet) {
       
       if (locations.length > 1) {
         for (var i = 0; i < locations.length; i++) {
-          var cell = headerRange.getCell(1, locations[i]);
+          var cell = headerRange.getCell(locations[i].row, locations[i].column);
           var message = "Duplicate column";
-          markCell(cell, Status.ERROR, message);
+          markCell_(cell, Status.ERROR, message);
         }
       }
       
@@ -43,49 +43,25 @@ function validateHeader(sheet) {
         for (var i = 0; i < locations.length; i++) {
           var location = locations[i];
           
-          if (location != requiredLocation[0]) {
-            var cell = headerRange.getCell(1, location);
+          if (location.column != requiredLocation[0]) {
+            var cell = headerRange.getCell(location.row, location.column);
             var message = "Misplaced column; must be the " + requiredLocation[1] + " column";
-            markCell(cell, Status.ERROR, message);
+            markCell_(cell, Status.ERROR, message);
           }
         }
       }
       
       // #SampleID is an invalid column header name, so we'll only check header names
       // if they aren't required headers. Assume the required header names are valid.
-      if (!requiredHeaders.hasOwnProperty(header) && isInvalidHeaderName(header)) {
+      if (!requiredHeaders.hasOwnProperty(header) && isInvalidHeaderName_(header)) {
         for (var i = 0; i < locations.length; i++) {
-          var cell = headerRange.getCell(1, locations[i]);
+          var cell = headerRange.getCell(locations[i].row, locations[i].column);
           var message = "Invalid character(s) in column header name";
-          markCell(cell, Status.WARNING, message);
+          markCell_(cell, Status.WARNING, message);
         }
       }
     }
   }
-};
-
-function getHeaderRange(sheet) {
-  return sheet.getRange(1, 1, 1, sheet.getLastColumn());
-};
-
-function getHeaderLocations(headerRange) {
-  var numColumns = headerRange.getNumColumns();
-  var values = headerRange.getValues();
-  
-  var valueLocations = {};
-  for (var i = 0; i < numColumns; i++) {
-    var value = values[0][i];
-    var location = i + 1;
-    
-    if (valueLocations.hasOwnProperty(value)) {
-      valueLocations[value].push(location);
-    }
-    else {
-      valueLocations[value] = [location];
-    }
-  }
-  
-  return valueLocations;
 };
 
 /**
@@ -93,6 +69,6 @@ function getHeaderLocations(headerRange) {
  *
  * TODO: this will fail with numbers. Should explicitly convert to string first!
  */
-function isInvalidHeaderName(name) {
+function isInvalidHeaderName_(name) {
   return !name.match(/^[a-z][a-z0-9_]*$/i);
 };

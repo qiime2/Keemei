@@ -17,12 +17,11 @@ function onOpen() {
 
 function validate() {
   var sheet = SpreadsheetApp.getActiveSheet();
+  resetRange_(sheet.getDataRange());
   validateHeader_(sheet);
 
   var headerRange = getHeaderRange_(sheet);
   for (var column = 1; column <= sheet.getLastColumn(); column++) {
-    resetRange_(getColumnDataRange_(sheet, column));
-
     var headerName = headerRange.getCell(1, column).getValue();
     switch(headerName) {
       case "#SampleID":

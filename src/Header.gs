@@ -1,7 +1,5 @@
 function validateHeader_(sheet) {
   var headerRange = getHeaderRange_(sheet);
-  resetRange_(headerRange);
-  
   var headerLocations = getValueToPositionsMapping_(headerRange);
   var requiredHeaders = {
     "#SampleID": [1, "first"],

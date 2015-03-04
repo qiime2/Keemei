@@ -21,38 +21,46 @@ function validate() {
   var state = initializeState_(range);
 
   resetStatus_(range);
-  validateHeader_(sheet, state);
+
+  var requiredHeaders = {
+    "#SampleID": [1, "first"],
+    "BarcodeSequence": [2, "second"],
+    "LinkerPrimerSequence": [3, "third"],
+    "Description": [sheet.getLastColumn(), "last"]
+  };
+  validateHeader_(sheet, state, requiredHeaders);
 
   var headerRange = getHeaderRange_(sheet);
   for (var column = 1; column <= sheet.getLastColumn(); column++) {
     var headerName = headerRange.getCell(1, column).getValue();
+    var columnRange = getColumnDataRange_(sheet, column);
 
     switch(headerName) {
       case "#SampleID":
-        markDuplicates_(sheet, column, state);
-        markInvalidCells_(sheet, column, state, /[a-z0-9.]+/ig, Status.WARNING,
+        markDuplicates_(columnRange, state, "Duplicate cell");
+        markInvalidCells_(columnRange, state, /[a-z0-9.]+/ig, Status.WARNING,
                           Status.ERROR, "sample ID",
                           "Only MIENS-compliant characters are allowed.");
         break;
 
       case "BarcodeSequence":
-        markDuplicates_(sheet, column, state);
+        markDuplicates_(columnRange, state, "Duplicate cell");
         // TODO only accept nondegenerate characters
-        markInvalidCells_(sheet, column, state, /[acbdghkmnsrtwvy,]+/ig, Status.ERROR,
+        markInvalidCells_(columnRange, state, /[acbdghkmnsrtwvy,]+/ig, Status.ERROR,
                           Status.ERROR, "barcode sequence",
                           "Only IUPAC DNA characters are allowed.");
         break;
 
       case "LinkerPrimerSequence":
         // Checks against valid IUPAC DNA characters (case-insensitive).
-        markInvalidCells_(sheet, column, state, /[acbdghkmnsrtwvy,]+/ig, Status.ERROR,
+        markInvalidCells_(columnRange, state, /[acbdghkmnsrtwvy,]+/ig, Status.ERROR,
                           Status.ERROR, "linker primer sequence",
                           "Only IUPAC DNA characters are allowed.");
         break;
 
       default:
         // generic metadata column
-        markInvalidCells_(sheet, column, state, /[a-z0-9_.\-+% ;:,\/]+/ig, Status.WARNING,
+        markInvalidCells_(columnRange, state, /[a-z0-9_.\-+% ;:,\/]+/ig, Status.WARNING,
                           Status.WARNING, "metadata");
     }
   }
@@ -108,6 +116,32 @@ function updateState_(state, position, color, note) {
   state.notes[i][j] = newNote;
 };
 
+function markDuplicates_(range, state, note) {
+  var duplicates = findDuplicates_(range);
+
+  for (var i = 0; i < duplicates.length; i++) {
+    var duplicate = duplicates[i];
+    updateState_(state, duplicate, Status.ERROR, note);
+  }
+};
+
+function findDuplicates_(range) {
+  var valueToPositions = getValueToPositionsMapping_(range);
+
+  var duplicates = [];
+  for (var key in valueToPositions) {
+    if (valueToPositions.hasOwnProperty(key)) {
+      var positions = valueToPositions[key];
+
+      if (positions.length > 1) {
+        duplicates = duplicates.concat(positions);
+      }
+    }
+  }
+
+  return duplicates;
+};
+
 function getValueToPositionsMapping_(range) {
   var values = range.getValues();
 
@@ -140,4 +174,88 @@ function resetStatus_(range) {
 function setStatus_(range, state) {
   range.setBackgrounds(state.colors);
   range.setNotes(state.notes);
+};
+
+function markInvalidCells_(range, state, regex, invalidCharactersStatus,
+                           emptyCellStatus, label, messageSuffix, ignoredValues) {
+  ignoredValues = (typeof ignoredValues === "undefined") ? {} : ignoredValues;
+
+  var invalids = findInvalidCells_(range, regex, ignoredValues);
+
+  for (var i = 0; i < invalids.length; i++) {
+    var invalid = invalids[i];
+
+    var msg = "Empty cell";
+    var status = emptyCellStatus;
+    if (invalid.invalidChars.length > 0) {
+      msg = Utilities.formatString("Invalid character(s) in %s: %s", label, invalid.invalidChars);
+      if (messageSuffix) {
+        msg += Utilities.formatString("\n\n%s", messageSuffix);
+      }
+      status = invalidCharactersStatus;
+    }
+
+    updateState_(state, invalid, status, msg);
+  }
+};
+
+function findInvalidCells_(range, regex, ignoredValues) {
+  var values = range.getValues();
+
+  var invalidPositions = [];
+  for (var i = 0; i < values.length; i++) {
+    for (var j = 0; j < values[i].length; j++) {
+      var value = values[i][j];
+
+      if (!ignoredValues.hasOwnProperty(value)) {
+        var status = validateCell_(value, regex);
+
+        if (!status.valid) {
+          var position = {
+            row: range.getRow() + i,
+            column: range.getColumn() + j,
+            invalidChars: status.invalidChars
+          };
+          invalidPositions.push(position);
+        }
+      }
+    }
+  }
+
+  return invalidPositions;
+};
+
+function validateCell_(value, regex) {
+  var valid = false;
+  var invalidChars = "";
+
+  if (value.length > 0) {
+    invalidChars = value.replace(regex, "");
+
+    if (invalidChars.length == 0)
+      valid = true;
+  }
+
+  return {
+    valid: valid,
+    invalidChars: invalidChars
+  };
+};
+
+function markMissingValues_(range, state, requiredValues, label) {
+  var valueToPositions = getValueToPositionsMapping_(range);
+
+  var missingValues = [];
+  for (var requiredValue in requiredValues) {
+    if (requiredValues.hasOwnProperty(requiredValue)) {
+      if (!valueToPositions.hasOwnProperty(requiredValue)) {
+        missingValues.push(requiredValue);
+      }
+    }
+  }
+
+  if (missingValues.length > 0) {
+    var message = Utilities.formatString("Missing required %s: %s", label, missingValues.join(", "));
+    updateState_(state, {row: range.getRow(), column: range.getColumn()}, Status.ERROR, message);
+  }
 };

@@ -22,16 +22,18 @@ function validateColumns_(sheet, state) {
 
       case "BarcodeSequence":
         markDuplicates_(columnRange, state, "Duplicate cell");
-        // TODO only accept nondegenerate characters
-        markInvalidCells_(columnRange, state, /[acbdghkmnsrtwvy,]+/ig, Status.ERROR,
+        // Check against IUPAC standard DNA characters (case-insensitive).
+        markInvalidCells_(columnRange, state, /[acgt]+/ig, Status.ERROR,
                           Status.ERROR, "barcode sequence",
-                          "Only IUPAC DNA characters are allowed.");
+                          "Only IUPAC standard DNA characters are allowed.");
         break;
 
       case "LinkerPrimerSequence":
-        // Checks against valid IUPAC DNA characters (case-insensitive).
+      case "ReversePrimer":
+        // Check against IUPAC DNA characters (case-insensitive). Allow commas
+        // since comma-separated primers are valid.
         markInvalidCells_(columnRange, state, /[acbdghkmnsrtwvy,]+/ig, Status.ERROR,
-                          Status.ERROR, "linker primer sequence",
+                          Status.ERROR, "primer sequence",
                           "Only IUPAC DNA characters are allowed.");
         break;
 

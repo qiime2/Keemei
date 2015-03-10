@@ -1,15 +1,10 @@
-function resetStatus_(range) {
-  range.setBackground(Status.RESET);
-  range.clearNote();
-};
-
 function setStatus_(range, state) {
   range.setBackgrounds(state.colors);
   range.setNotes(state.notes);
 };
 
 function initializeState_(range) {
-  colors = initializeGrid_(range, Status.RESET);
+  colors = initializeGrid_(range, Status.SUCCESS);
   notes = initializeGrid_(range, "");
   return {
     colors: colors,

@@ -52,7 +52,7 @@ function lengthMode_(range) {
   }
 
   var modeMap = {};
-  var mode = values[0][0]
+  var mode = values[0][0].length;
   var count = 1;
   for (var i = 0; i < values.length; i++) {
     for (var j = 0; j < values[i].length; j++) {

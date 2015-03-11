@@ -24,6 +24,13 @@ function onOpen() {
 
 function validate() {
   var sheet = SpreadsheetApp.getActiveSheet();
+
+  if (isSheetEmpty_(sheet)) {
+    var ui = SpreadsheetApp.getUi();
+    ui.alert("There is nothing to validate because the spreadsheet is empty.")
+    return;
+  }
+
   var range = sheet.getDataRange();
   var state = initializeState_(range);
 

@@ -11,12 +11,12 @@ function onOpen() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet();
   var entries = [
     {
-      name : "QIIME mapping file format (versions 0.92-1.9.x)",
-      functionName : "validate"
+      name: "QIIME mapping file format (versions 0.92-1.9.x)",
+      functionName: "validate"
     },
     {
-      name : "Clear status",
-      functionName : "clear"
+      name: "Clear status",
+      functionName: "clear"
     }
   ];
   sheet.addMenu("Validate metadata", entries);

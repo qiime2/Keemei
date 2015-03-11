@@ -22,6 +22,8 @@ function validateColumns_(sheet, state) {
 
       case "BarcodeSequence":
         markDuplicates_(columnRange, state, "Duplicate cell");
+        markUnequalLengths_(columnRange, state, "Barcode");
+
         // Check against IUPAC standard DNA characters (case-insensitive).
         markInvalidCells_(columnRange, state, /[acgt]+/ig, Status.ERROR,
                           Status.ERROR, "barcode sequence",

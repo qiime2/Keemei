@@ -24,6 +24,57 @@ function findDuplicates_(range) {
   return duplicates;
 };
 
+function markUnequalLengths_(range, state, label) {
+  var lengthMode = lengthMode_(range);
+  var valueToPositions = getValueToPositionsMapping_(range);
+
+  for (var value in valueToPositions) {
+    if (valueToPositions.hasOwnProperty(value)) {
+      if (value.length != lengthMode) {
+        var positions = valueToPositions[value];
+
+        for (var i = 0; i < positions.length; i++) {
+          var message = Utilities.formatString("%s length does not match the others", label);
+          updateState_(state, positions[i], Status.WARNING, message);
+        }
+      }
+    }
+  }
+};
+
+// modified from http://stackoverflow.com/a/1053865/3776794
+// no guarantee of which mode will be returned in the event of a tie
+function lengthMode_(range) {
+  var values = range.getValues();
+
+  if (values.length < 1 || values[0].length < 1) {
+    return null;
+  }
+
+  var modeMap = {};
+  var mode = values[0][0]
+  var count = 1;
+  for (var i = 0; i < values.length; i++) {
+    for (var j = 0; j < values[i].length; j++) {
+      var valueLength = values[i][j].length;
+
+      if (modeMap.hasOwnProperty(valueLength)) {
+        modeMap[valueLength]++;
+      }
+      else {
+        modeMap[valueLength] = 1;
+      }
+
+      if (modeMap[valueLength] > count) {
+        mode = valueLength;
+        count = modeMap[valueLength];
+      }
+    }
+  }
+
+  return mode;
+};
+
 function markMissingValues_(range, state, requiredValues, label) {
   var valueToPositions = getValueToPositionsMapping_(range);
 

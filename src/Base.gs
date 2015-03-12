@@ -7,19 +7,15 @@ var Status = {
   RESET: "#ffffff"
 };
 
-function onOpen() {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet();
-  var entries = [
-    {
-      name: "QIIME mapping file format (versions 0.92-1.9.x)",
-      functionName: "validate"
-    },
-    {
-      name: "Clear status",
-      functionName: "clear"
-    }
-  ];
-  sheet.addMenu("Validate metadata", entries);
+function onInstall(e) {
+  onOpen(e);
+};
+
+function onOpen(e) {
+  SpreadsheetApp.getUi().createAddonMenu()
+      .addItem("Validate QIIME mapping file format (versions 0.92-1.9.x)", "validate")
+      .addItem("Clear validation status", "clear")
+      .addToUi();
 };
 
 function validate() {
@@ -27,7 +23,7 @@ function validate() {
 
   if (isSheetEmpty_(sheet)) {
     var ui = SpreadsheetApp.getUi();
-    ui.alert("There is nothing to validate because the spreadsheet is empty.")
+    ui.alert("Empty spreadsheet", "There is nothing to validate because the spreadsheet is empty.", ui.ButtonSet.OK)
     return;
   }
 

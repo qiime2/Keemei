@@ -1,5 +1,7 @@
 # keemei
 
+[![Join the chat at https://gitter.im/jairideout/Keemei](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/jairideout/Keemei?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 *Validate QIIME metadata in Google Sheets*
 
 keemei (canonically pronounced *key may*) is an open-source, BSD-licensed tool for validating [QIIME](http://qiime.org/) metadata stored in [Google Sheets](http://www.google.com/sheets/about/). It is written in [Google Apps Script](https://developers.google.com/apps-script/) for easy integration with Google Sheets.

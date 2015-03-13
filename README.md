@@ -2,9 +2,11 @@
 
 [![Join the chat at https://gitter.im/jairideout/Keemei](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/jairideout/Keemei?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-*Validate QIIME metadata in Google Sheets*
+*Validate bioinformatics metadata in Google Sheets*
 
-Keemei (canonically pronounced *key may*) is an open-source, BSD-licensed tool for validating [QIIME](http://qiime.org/) metadata stored in [Google Sheets](http://www.google.com/sheets/about/). It is written in [Google Apps Script](https://developers.google.com/apps-script/) for easy integration with Google Sheets.
+Keemei (canonically pronounced *key may*) is an open-source, BSD-licensed tool for validating common bioinformatics metadata file formats stored in [Google Sheets](http://www.google.com/sheets/about/). It is written in [Google Apps Script](https://developers.google.com/apps-script/) for easy integration with Google Sheets.
+
+Keemei currently supports [QIIME's](http://qiime.org/) metadata mapping file format (as defined [here](http://qiime.org/documentation/file_formats.html#metadata-mapping-files)). Support will be added in the future for additional metadata file formats used in bioinformatics (e.g., formats defined by [Qiita](https://github.com/biocore/qiita), [SourceTracker](http://sourceforge.net/projects/sourcetracker/), and [MG-RAST](https://metagenomics.anl.gov/)).
 
 **Note:** Keemei is currently under active development and undergoing internal testing. Once complete, an initial public release will be installable as a [Google Sheets add-on](https://developers.google.com/apps-script/add-ons/).
 

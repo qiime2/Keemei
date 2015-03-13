@@ -11,7 +11,10 @@ function startsWith_(str, substr) {
 function getFormattedValues_(range) {
   // ensure the spreadsheet config overrides the script's
   var ss = range.getSheet().getParent();
-  var conv = SheetConverter.init(ss.getSpreadsheetTimeZone(),
-                                 ss.getSpreadsheetLocale());
+
+  // this used to be SheetConverter.init(...) when using the SheetConverter library.
+  // since library usage is discouraged in add-ons, we've included the SheetConverter
+  // source code in this project and access it differently.
+  var conv = init(ss.getSpreadsheetTimeZone(), ss.getSpreadsheetLocale());
   return conv.convertRange(range);
 };

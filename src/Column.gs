@@ -15,14 +15,14 @@ function validateColumns_(sheet, state) {
     var header = headers[0][column - 1];
     switch(header) {
       case "#SampleID":
-        markDuplicates_(columnRange, state, "Duplicate cell");
+        markDuplicates_(columnRange, state, "Duplicate sample ID");
         markInvalidCells_(columnRange, state, /[a-z0-9.]+/ig, Status.WARNING,
                           Status.ERROR, "sample ID",
                           "Only MIENS-compliant characters are allowed.");
         break;
 
       case "BarcodeSequence":
-        markDuplicates_(columnRange, state, "Duplicate cell");
+        markDuplicates_(columnRange, state, "Duplicate barcode sequence");
         markUnequalLengths_(columnRange, state, "Barcode");
 
         // Check against IUPAC standard DNA characters (case-insensitive).

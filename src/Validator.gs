@@ -1,27 +1,27 @@
 function markDuplicates_(range, state, note) {
-  var duplicates = findDuplicates_(range);
-
-  for (var i = 0; i < duplicates.length; i++) {
-    var duplicate = duplicates[i];
-    updateState_(state, duplicate, Status.ERROR, note);
-  }
-};
-
-function findDuplicates_(range) {
   var valueToPositions = getValueToPositionsMapping_(range);
 
-  var duplicates = [];
-  for (var key in valueToPositions) {
-    if (valueToPositions.hasOwnProperty(key)) {
-      var positions = valueToPositions[key];
+  for (var value in valueToPositions) {
+    if (valueToPositions.hasOwnProperty(value)) {
+      var positions = valueToPositions[value];
 
       if (positions.length > 1) {
-        duplicates = duplicates.concat(positions);
+        var duplicates = [];
+        for (var i = 0; i < positions.length; i++) {
+          var position = positions[i];
+          duplicates.push(getA1Notation_(position));
+        }
+
+        var formattedDuplicates = duplicates.join(", ");
+
+        for (var i = 0; i < positions.length; i++) {
+          var position = positions[i];
+          var message = Utilities.formatString("%s. Duplicates in %s", note, formattedDuplicates);
+          updateState_(state, position, Status.ERROR, message);
+        }
       }
     }
   }
-
-  return duplicates;
 };
 
 function markUnequalLengths_(range, state, label) {

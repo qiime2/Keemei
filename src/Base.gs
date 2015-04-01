@@ -15,6 +15,7 @@ function onOpen(e) {
   SpreadsheetApp.getUi().createAddonMenu()
       .addItem("Validate QIIME mapping file format (versions 0.92-1.9.x)", "validate")
       .addItem("Clear validation status", "clear")
+      .addItem("About", "about")
       .addToUi();
 };
 
@@ -23,7 +24,7 @@ function validate() {
 
   if (isSheetEmpty_(sheet)) {
     var ui = SpreadsheetApp.getUi();
-    ui.alert("Empty spreadsheet", "There is nothing to validate because the spreadsheet is empty.", ui.ButtonSet.OK)
+    ui.alert("Empty spreadsheet", "There is nothing to validate because the spreadsheet is empty.", ui.ButtonSet.OK);
     return;
   }
 
@@ -48,4 +49,12 @@ function clear() {
   var range = SpreadsheetApp.getActiveSheet().getDataRange();
   range.setBackground(Status.RESET);
   range.clearNote();
+};
+
+function about() {
+  var htmlOutput = HtmlService
+     .createHtmlOutputFromFile("About")
+     .setSandboxMode(HtmlService.SandboxMode.NATIVE)
+     .setHeight(175);
+  SpreadsheetApp.getUi().showModalDialog(htmlOutput, "About Keemei");
 };

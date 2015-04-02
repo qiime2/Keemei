@@ -55,6 +55,6 @@ function about() {
   var htmlOutput = HtmlService
      .createHtmlOutputFromFile("About")
      .setSandboxMode(HtmlService.SandboxMode.NATIVE)
-     .setHeight(175);
+     .setHeight(225);
   SpreadsheetApp.getUi().showModalDialog(htmlOutput, "About Keemei");
 };

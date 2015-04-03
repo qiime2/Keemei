@@ -1,5 +1,7 @@
 # Keemei
 
+[![Join the chat at https://gitter.im/biocore/Keemei](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/biocore/Keemei?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 *Validate bioinformatics metadata in Google Sheets*
 
 Keemei (canonically pronounced *key may*) is an open-source, BSD-licensed tool for validating common bioinformatics metadata file formats stored in [Google Sheets](http://www.google.com/sheets/about/). It is written in [Google Apps Script](https://developers.google.com/apps-script/) for easy integration with Google Sheets.

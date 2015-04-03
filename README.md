@@ -12,11 +12,11 @@ Keemei currently supports [QIIME's](http://qiime.org/) metadata mapping file for
 
 ## Getting started
 
-To get started with Keemei, [browse the docs](https://github.com/jairideout/Keemei/wiki).
+To get started with Keemei, [browse the docs](https://github.com/biocore/Keemei/wiki).
 
 ## Getting involved
 
-Keemei is intended to be an open development effort, so if you'd like to get involved, get in touch on [Gitter](https://gitter.im/jairideout/Keemei) or the [issue tracker](https://github.com/jairideout/Keemei/issues).
+Keemei is intended to be an open development effort, so if you'd like to get involved, get in touch on [Gitter](https://gitter.im/biocore/Keemei) or the [issue tracker](https://github.com/biocore/Keemei/issues).
 
 ## Licensing
 
@@ -26,4 +26,4 @@ Keemei uses the [SheetConverter](https://sites.google.com/site/scriptsexamples/c
 
 ## Credits
 
-Keemei was developed by [Jai Ram Rideout](http://caporasolab.us/people/jai-rideout) ([@jairideout](https://github.com/jairideout)) in the [Caporaso Lab](http://caporasolab.us). See the full list of Keemei's contributors [here](https://github.com/jairideout/Keemei/graphs/contributors).
+Keemei was developed by [Jai Ram Rideout](http://caporasolab.us/people/jai-rideout) ([@jairideout](https://github.com/jairideout)) in the [Caporaso Lab](http://caporasolab.us). See the full list of Keemei's contributors [here](https://github.com/biocore/Keemei/graphs/contributors).

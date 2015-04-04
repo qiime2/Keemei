@@ -15,9 +15,9 @@ highlighter: pygments
 
 
 ### content configuration ###
-title:       "SinglePaged - Title: Edit me in _config.yml!"
-keywords:    "SinglePaged, jekyll, template, github, blog, single page"
-description: "A single-page template for Jekyll based blogs (like what you'd use on github pages!)"
+title:       "Keemei: Validate bioinformatics metadata in Google Sheets"
+keywords:    "Keemei, bioinformatics, metadata, validation, QIIME, qiime, Google Sheets, add-on, spreadsheet"
+description: "Keemei is an open source Google Sheets add-on for validating bioinformatics metadata, including QIIME mapping files."
 source_link: "https://github.com/t413/SinglePaged"
 favicon:     #put a path like: "img/favicon.ico"
 touch_icon:  #put a path like: "img/apple-touch-icon.png"
@@ -33,4 +33,3 @@ colors:
   purple:    '#c869bf'
   orange:    '#fab125'
   turquoise: '#0fbfcf'
-  

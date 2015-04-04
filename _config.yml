@@ -18,10 +18,10 @@ highlighter: pygments
 title:       "Keemei: Validate bioinformatics metadata in Google Sheets"
 keywords:    "Keemei, bioinformatics, metadata, validation, QIIME, qiime, Google Sheets, add-on, spreadsheet"
 description: "Keemei is an open source Google Sheets add-on for validating bioinformatics metadata, including QIIME mapping files."
-source_link: "https://github.com/t413/SinglePaged"
+source_link: "https://github.com/biocore/Keemei"
 favicon:     #put a path like: "img/favicon.ico"
 touch_icon:  #put a path like: "img/apple-touch-icon.png"
-google_analytics_key: ## put YOUR key here to enable tracking! (blank to disable)
+google_analytics_key: UA-38042047-2
 
 
 ### template colors, used site-wide via css ###

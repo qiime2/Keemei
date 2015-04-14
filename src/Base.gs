@@ -13,7 +13,7 @@ function onInstall(e) {
 
 function onOpen(e) {
   SpreadsheetApp.getUi().createAddonMenu()
-      .addItem("Validate QIIME mapping file format (versions 0.92-1.9.x)", "validate")
+      .addItem("Validate QIIME mapping file", "validate")
       .addItem("Clear validation status", "clear")
       .addItem("About", "about")
       .addToUi();

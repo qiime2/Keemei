@@ -4,7 +4,7 @@ function setStatus_(range, state) {
 };
 
 function initializeState_(range) {
-  colors = initializeGrid_(range, Status.SUCCESS);
+  colors = initializeGrid_(range, Status.RESET);
   notes = initializeGrid_(range, "");
   return {
     colors: colors,

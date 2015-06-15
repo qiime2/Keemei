@@ -3,6 +3,20 @@ function setStatus_(range, state) {
   range.setNotes(state.notes);
 };
 
+function isValidState_(state) {
+  var valid = true;
+  for (var i = 0; i < state.colors.length; i++) {
+    for (var j = 0; j < state.colors[i].length; j++) {
+      var color = state.colors[i][j];
+      if (color == Status.ERROR || color == Status.WARNING) {
+        valid = false;
+        break;
+      }
+    }
+  }
+  return valid;
+};
+
 function initializeState_(range) {
   colors = initializeGrid_(range, Status.RESET);
   notes = initializeGrid_(range, "");

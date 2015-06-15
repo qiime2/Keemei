@@ -43,6 +43,11 @@ function validate() {
   validateColumns_(sheet, state);
 
   setStatus_(range, state);
+
+  if (isValidState_(state)) {
+    var ui = SpreadsheetApp.getUi();
+    ui.alert("Valid spreadsheet", "All's well! Your spreadsheet is valid.", ui.ButtonSet.OK);
+  }
 };
 
 function clear() {

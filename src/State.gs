@@ -47,6 +47,13 @@ function updateState_(state, position, color, note) {
     state.colors[i][j] = color;
   }
 
+  if (color == Status.ERROR) {
+    note = "Error: " + note;
+  }
+  else if (color == Status.WARNING) {
+    note = "Warning: " + note;
+  }
+
   var currentNote = state.notes[i][j];
   var newNote = note;
   if (currentNote) {

@@ -93,6 +93,23 @@ function markMissingValues_(range, state, requiredValues, label) {
   }
 };
 
+function markLeadingTrailingWhitespaceCells_(range, state) {
+  var valueToPositions = getValueToPositionsMapping_(range);
+
+  for (var value in valueToPositions) {
+    if (valueToPositions.hasOwnProperty(value)) {
+      if (value != value.trim()) {
+        var positions = valueToPositions[value];
+
+        for (var i = 0; i < positions.length; i++) {
+          var message = "Cell has leading and/or trailing whitespace characters";
+          updateState_(state, positions[i], Status.WARNING, message);
+        }
+      }
+    }
+  }
+};
+
 function markInvalidCells_(range, state, regex, invalidCharactersStatus,
                            emptyCellStatus, label, messageSuffix, ignoredValues) {
   ignoredValues = (typeof ignoredValues === "undefined") ? {} : ignoredValues;

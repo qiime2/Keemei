@@ -16,6 +16,7 @@ function validateHeader_(sheet, state, requiredHeaders) {
                     Status.ERROR, "column header name", null, requiredHeaders);
 
   markMisplacedColumns_(headerRange, state, requiredHeaders);
+  markLeadingTrailingWhitespaceCells_(headerRange, state);
 };
 
 // TODO: refactor this validator to be general (it is currently specific to headers)

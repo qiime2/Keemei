@@ -19,6 +19,7 @@ function validateColumns_(sheet, state) {
         markInvalidCells_(columnRange, state, /[a-z0-9.]+/ig, Status.WARNING,
                           Status.ERROR, "sample ID",
                           "Only MIENS-compliant characters are allowed.");
+        markLeadingTrailingWhitespaceCells_(columnRange, state);
         break;
 
       case "BarcodeSequence":
@@ -29,6 +30,7 @@ function validateColumns_(sheet, state) {
         markInvalidCells_(columnRange, state, /[acgt]+/ig, Status.ERROR,
                           Status.ERROR, "barcode sequence",
                           "Only IUPAC standard DNA characters are allowed.");
+        markLeadingTrailingWhitespaceCells_(columnRange, state);
         break;
 
       case "LinkerPrimerSequence":
@@ -38,12 +40,14 @@ function validateColumns_(sheet, state) {
         markInvalidCells_(columnRange, state, /[acbdghkmnsrtwvy,]+/ig, Status.ERROR,
                           Status.ERROR, "primer sequence",
                           "Only IUPAC DNA characters are allowed.");
+        markLeadingTrailingWhitespaceCells_(columnRange, state);
         break;
 
       default:
         // generic metadata column
         markInvalidCells_(columnRange, state, /[a-z0-9_.\-+% ;:,\/]+/ig, Status.WARNING,
                           Status.WARNING, "metadata");
+        markLeadingTrailingWhitespaceCells_(columnRange, state);
     }
   }
 };

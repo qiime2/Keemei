@@ -1,6 +1,8 @@
 # Keemei changelog
 
-## Development version
+## Version 5 (2015-06-17)
+
+Minor alpha release with several usability enhancements.
 
 ### Features
 * Valid cells (i.e., those without any errors or warnings) are no longer colored green as this information wasn't important to display. The green coloring could actually detract from the ease of locating invalid cells ([#58](https://github.com/biocore/Keemei/issues/58))

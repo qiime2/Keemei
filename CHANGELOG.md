@@ -8,5 +8,5 @@
 * Error and warning messages are prefixed with a label to indicate their type (e.g., "Warning: Empty cell"). [#31](https://github.com/biocore/Keemei/issues/31)
 * Cells with leading/trailing whitespace characters are now flagged with a warning. [#4](https://github.com/biocore/Keemei/issues/4)
 
-## Version 2
+## Version 2 (2015-04-14)
 Initial alpha release.

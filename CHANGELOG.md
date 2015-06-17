@@ -1,5 +1,7 @@
 # Keemei changelog
 
+**Note on versioning:** the version numbers used here match the version numbers displayed to users in the Chrome Web Store. Sometimes there are gaps between release versions (e.g., version 2 jumps to version 5). This happens because each separate upload of Keemei to the web store increments the version number, and sometimes multiple uploads are necessary before a release is finalized (e.g., if the release is reviewed by an add-ons advisor and updates are required before it can go public). Therefore, the version numbering used here in the changelog and tagged GitHub releases will match the public release version displayed in the web store.
+
 ## Version 5 (2015-06-17)
 
 Minor alpha release with several usability enhancements.

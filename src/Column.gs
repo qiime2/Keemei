@@ -8,7 +8,7 @@ function validateColumns_(sheet, state) {
     return;
   }
 
-  var headers = getFormattedValues_(getHeaderRange_(sheet));
+  var headers = getHeaderRange_(sheet).getDisplayValues();
   for (var column = 1; column <= sheet.getLastColumn(); column++) {
     var columnRange = sheet.getRange(startRow, column, lastRow - startRow + 1);
 
@@ -57,7 +57,7 @@ function getMetadataStartRow_(sheet) {
   for (var row = startRow; row <= sheet.getLastRow(); row++) {
     // TODO: this should be optimized to pull the entire
     // first column in order to reduce API calls
-    var value = getFormattedValues_(sheet.getRange(row, 1))[0][0];
+    var value = sheet.getRange(row, 1).getDisplayValues()[0][0];
 
     if (startsWith_(value, "#")) {
       startRow++;

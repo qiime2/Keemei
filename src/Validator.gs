@@ -45,7 +45,7 @@ function markUnequalLengths_(range, state, label) {
 // modified from http://stackoverflow.com/a/1053865/3776794
 // no guarantee of which mode will be returned in the event of a tie
 function lengthMode_(range) {
-  var values = getFormattedValues_(range);
+  var values = range.getDisplayValues();
 
   if (values.length < 1 || values[0].length < 1) {
     return null;
@@ -134,7 +134,7 @@ function markInvalidCells_(range, state, regex, invalidCharactersStatus,
 };
 
 function findInvalidCells_(range, regex, ignoredValues) {
-  var values = getFormattedValues_(range);
+  var values = range.getDisplayValues();
 
   var invalidPositions = [];
   for (var i = 0; i < values.length; i++) {
@@ -160,7 +160,7 @@ function findInvalidCells_(range, regex, ignoredValues) {
 };
 
 function getValueToPositionsMapping_(range) {
-  var values = getFormattedValues_(range);
+  var values = range.getDisplayValues();
 
   var valueToPositions = {};
   for (var i = 0; i < values.length; i++) {

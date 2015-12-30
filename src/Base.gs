@@ -1,12 +1,3 @@
-// TODO: make these colors customizable
-// color choices taken from http://isabelcastillo.com/error-info-messages-css
-var Status = {
-  SUCCESS: "#DFF2BF",
-  WARNING: "#FEEFB3",
-  ERROR: "#FFBABA",
-  RESET: "#ffffff"
-};
-
 function onInstall(e) {
   onOpen(e);
 };
@@ -28,9 +19,6 @@ function validate() {
     return;
   }
 
-  var range = sheet.getDataRange();
-  var state = initializeState_(range);
-
   // TODO: required headers and their locations are currently hardcoded for QIIME metadata
   var requiredHeaders = {
     "#SampleID": [1, "first"],
@@ -39,21 +27,16 @@ function validate() {
     "Description": [sheet.getLastColumn(), "last"]
   };
 
-  validateHeader_(sheet, state, requiredHeaders);
-  validateColumns_(sheet, state);
+  var validationResults = [];
+  validationResults.push(validateHeader_(sheet, requiredHeaders));
+  validationResults.push(validateColumns_(sheet));
+  validationResults = mergeValidationResults_(validationResults);
 
-  setStatus_(range, state);
-
-  if (isValidState_(state)) {
-    var ui = SpreadsheetApp.getUi();
-    ui.alert("Valid spreadsheet", "All's well! Your spreadsheet is valid.", ui.ButtonSet.OK);
-  }
+  renderSheetView_(sheet, validationResults);
 };
 
 function clear() {
-  var range = SpreadsheetApp.getActiveSheet().getDataRange();
-  range.setBackground(Status.RESET);
-  range.clearNote();
+  resetSheetView_(SpreadsheetApp.getActiveSheet());
 };
 
 function about() {

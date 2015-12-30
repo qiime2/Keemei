@@ -2,43 +2,51 @@ function getHeaderRange_(sheet) {
   return sheet.getRange(1, 1, 1, sheet.getLastColumn());
 };
 
-function validateHeader_(sheet, state, requiredHeaders) {
+function validateHeader_(sheet, requiredHeaders) {
   var headerRange = getHeaderRange_(sheet);
+  var valueToPositions = getValueToPositionsMapping_(headerRange);
 
-  markMissingValues_(headerRange, state, requiredHeaders, "columns");
-  markDuplicates_(headerRange, state, "Duplicate column");
+  var validationResults = [];
+  validationResults.push(findMissingValues_(valueToPositions, requiredHeaders, "columns", headerRange));
+  validationResults.push(findDuplicates_(valueToPositions, "Duplicate column"));
 
   // #SampleID is an invalid column header name, so we'll only check header names
   // if they aren't required headers. Assume the required header names are valid.
   //
   // TODO: improve reporting of invalid header names, include description
-  markInvalidCells_(headerRange, state, /[a-z][a-z0-9_]*$/ig, Status.WARNING,
-                    Status.ERROR, "column header name", null, requiredHeaders);
+  validationResults.push(findInvalidCells_(valueToPositions, /[a-z][a-z0-9_]*$/ig, "warnings",
+                                           "errors", "column header name", null, requiredHeaders));
 
-  markMisplacedColumns_(headerRange, state, requiredHeaders);
-  markLeadingTrailingWhitespaceCells_(headerRange, state);
+  validationResults.push(findMisplacedColumns_(valueToPositions, requiredHeaders));
+  validationResults.push(findLeadingTrailingWhitespaceCells_(valueToPositions));
+
+  return mergeValidationResults_(validationResults);
 };
 
 // TODO: refactor this validator to be general (it is currently specific to headers)
-function markMisplacedColumns_(range, state, requiredHeaders) {
-  var headerLocations = getValueToPositionsMapping_(range);
+function findMisplacedColumns_(valueToPositions, requiredHeaders) {
+  var invalidCells = {};
+  for (var value in valueToPositions) {
+    if (valueToPositions.hasOwnProperty(value)) {
+      var positions = valueToPositions[value];
 
-  for (var header in headerLocations) {
-    if (headerLocations.hasOwnProperty(header)) {
-      var locations = headerLocations[header];
+      if (requiredHeaders.hasOwnProperty(value)) {
+        var requiredLocation = requiredHeaders[value];
+        var message = "Misplaced column; must be the " + requiredLocation[1] + " column";
 
-      if (requiredHeaders.hasOwnProperty(header)) {
-        var requiredLocation = requiredHeaders[header];
+        for (var i = 0; i < positions.length; i++) {
+          var position = positions[i];
 
-        for (var i = 0; i < locations.length; i++) {
-          var location = locations[i];
-
-          if (location.column != requiredLocation[0]) {
-            var message = "Misplaced column; must be the " + requiredLocation[1] + " column";
-            updateState_(state, location, Status.ERROR, message);
+          if (position.column != requiredLocation[0]) {
+            invalidCells[position.a1] = {
+              "position": position,
+              "errors": [message]
+            };
           }
         }
       }
     }
   }
+
+  return invalidCells;
 };

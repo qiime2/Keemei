@@ -1,6 +1,5 @@
-function markDuplicates_(range, state, note) {
-  var valueToPositions = getValueToPositionsMapping_(range);
-
+function findDuplicates_(valueToPositions, note) {
+  var invalidCells = {};
   for (var value in valueToPositions) {
     if (valueToPositions.hasOwnProperty(value)) {
       var positions = valueToPositions[value];
@@ -8,66 +7,62 @@ function markDuplicates_(range, state, note) {
       if (positions.length > 1) {
         var duplicates = [];
         for (var i = 0; i < positions.length; i++) {
-          var position = positions[i];
-          duplicates.push(getA1Notation_(position));
+          duplicates.push(positions[i].a1);
         }
-
         var formattedDuplicates = duplicates.join(", ");
+        var message = Utilities.formatString("%s. Duplicates in %s", note, formattedDuplicates);
 
         for (var i = 0; i < positions.length; i++) {
-          var position = positions[i];
-          var message = Utilities.formatString("%s. Duplicates in %s", note, formattedDuplicates);
-          updateState_(state, position, Status.ERROR, message);
+          invalidCells[positions[i].a1] = {
+            "position": positions[i],
+            "errors": [message]
+          };
         }
       }
     }
   }
+
+  return invalidCells;
 };
 
-function markUnequalLengths_(range, state, label) {
-  var lengthMode = lengthMode_(range);
-  var valueToPositions = getValueToPositionsMapping_(range);
-
+function findUnequalLengths_(valueToPositions, label) {
+  var invalidCells = {};
+  var message = Utilities.formatString("%s length does not match the others", label);
+  var lengthMode = lengthMode_(valueToPositions);
   for (var value in valueToPositions) {
     if (valueToPositions.hasOwnProperty(value)) {
       if (value.length != lengthMode) {
         var positions = valueToPositions[value];
 
         for (var i = 0; i < positions.length; i++) {
-          var message = Utilities.formatString("%s length does not match the others", label);
-          updateState_(state, positions[i], Status.WARNING, message);
+          invalidCells[positions[i].a1] = {
+            "position": positions[i],
+            "warnings": [message]
+          };
         }
       }
     }
   }
+
+  return invalidCells;
 };
 
 // modified from http://stackoverflow.com/a/1053865/3776794
 // no guarantee of which mode will be returned in the event of a tie
-function lengthMode_(range) {
-  var values = range.getDisplayValues();
-
-  if (values.length < 1 || values[0].length < 1) {
-    return null;
-  }
-
+function lengthMode_(valueToPositions) {
   var modeMap = {};
-  var mode = values[0][0].length;
-  var count = 1;
-  for (var i = 0; i < values.length; i++) {
-    for (var j = 0; j < values[i].length; j++) {
-      var valueLength = values[i][j].length;
-
-      if (modeMap.hasOwnProperty(valueLength)) {
-        modeMap[valueLength]++;
+  var mode = null;
+  var count = 0;
+  for (var value in valueToPositions) {
+    if (valueToPositions.hasOwnProperty(value)) {
+      if (!modeMap.hasOwnProperty(value.length)) {
+        modeMap[value.length] = 0;
       }
-      else {
-        modeMap[valueLength] = 1;
-      }
+      modeMap[value.length] += valueToPositions[value].length;
 
-      if (modeMap[valueLength] > count) {
-        mode = valueLength;
-        count = modeMap[valueLength];
+      if (modeMap[value.length] > count) {
+        mode = value.length;
+        count = modeMap[value.length];
       }
     }
   }
@@ -75,8 +70,8 @@ function lengthMode_(range) {
   return mode;
 };
 
-function markMissingValues_(range, state, requiredValues, label) {
-  var valueToPositions = getValueToPositionsMapping_(range);
+function findMissingValues_(valueToPositions, requiredValues, label, range) {
+  var invalidCells = {};
 
   var missingValues = [];
   for (var requiredValue in requiredValues) {
@@ -89,12 +84,27 @@ function markMissingValues_(range, state, requiredValues, label) {
 
   if (missingValues.length > 0) {
     var message = Utilities.formatString("Missing required %s: %s", label, missingValues.join(", "));
-    updateState_(state, {row: range.getRow(), column: range.getColumn()}, Status.ERROR, message);
+
+    var row = range.getRow();
+    var column = range.getColumn();
+    var a1 = getA1Notation_(row, column);
+    var position = {
+      row: row,
+      column: column,
+      a1: a1
+    };
+    invalidCells[position.a1] = {
+      "position": position,
+      "errors": [message]
+    };
   }
+
+  return invalidCells;
 };
 
-function markLeadingTrailingWhitespaceCells_(range, state) {
-  var valueToPositions = getValueToPositionsMapping_(range);
+function findLeadingTrailingWhitespaceCells_(valueToPositions) {
+  var invalidCells = {};
+  var message = "Cell has leading and/or trailing whitespace characters";
 
   for (var value in valueToPositions) {
     if (valueToPositions.hasOwnProperty(value)) {
@@ -102,88 +112,54 @@ function markLeadingTrailingWhitespaceCells_(range, state) {
         var positions = valueToPositions[value];
 
         for (var i = 0; i < positions.length; i++) {
-          var message = "Cell has leading and/or trailing whitespace characters";
-          updateState_(state, positions[i], Status.WARNING, message);
+          invalidCells[positions[i].a1] = {
+            "position": positions[i],
+            "warnings": [message]
+          };
         }
       }
     }
   }
+
+  return invalidCells;
 };
 
-function markInvalidCells_(range, state, regex, invalidCharactersStatus,
-                           emptyCellStatus, label, messageSuffix, ignoredValues) {
+function findInvalidCells_(valueToPositions, regex, invalidCharactersErrorType,
+                           emptyCellErrorType, label, messageSuffix, ignoredValues) {
   ignoredValues = (typeof ignoredValues === "undefined") ? {} : ignoredValues;
 
-  var invalids = findInvalidCells_(range, regex, ignoredValues);
+  var invalidCells = {};
+  for (var value in valueToPositions) {
+    if (valueToPositions.hasOwnProperty(value) && !ignoredValues.hasOwnProperty(value)) {
+      var status = validateValue_(value, regex);
 
-  for (var i = 0; i < invalids.length; i++) {
-    var invalid = invalids[i];
+      if (!status.valid) {
+        var message = "Empty cell";
+        var errorType = emptyCellErrorType;
+        if (status.invalidChars.length > 0) {
+          message = Utilities.formatString("Invalid character(s) in %s: %s", label, status.invalidChars);
+          if (messageSuffix) {
+            message += Utilities.formatString("\n\n%s", messageSuffix);
+          }
+          errorType = invalidCharactersErrorType;
+        }
 
-    var msg = "Empty cell";
-    var status = emptyCellStatus;
-    if (invalid.invalidChars.length > 0) {
-      msg = Utilities.formatString("Invalid character(s) in %s: %s", label, invalid.invalidChars);
-      if (messageSuffix) {
-        msg += Utilities.formatString("\n\n%s", messageSuffix);
-      }
-      status = invalidCharactersStatus;
-    }
-
-    updateState_(state, invalid, status, msg);
-  }
-};
-
-function findInvalidCells_(range, regex, ignoredValues) {
-  var values = range.getDisplayValues();
-
-  var invalidPositions = [];
-  for (var i = 0; i < values.length; i++) {
-    for (var j = 0; j < values[i].length; j++) {
-      var value = values[i][j];
-
-      if (!ignoredValues.hasOwnProperty(value)) {
-        var status = validateCell_(value, regex);
-
-        if (!status.valid) {
-          var position = {
-            row: range.getRow() + i,
-            column: range.getColumn() + j,
-            invalidChars: status.invalidChars
+        var positions = valueToPositions[value];
+        for (var i = 0; i < positions.length; i++) {
+          var invalidCell = {
+            "position": positions[i]
           };
-          invalidPositions.push(position);
+          invalidCell[errorType] = [message];
+          invalidCells[positions[i].a1] = invalidCell;
         }
       }
     }
   }
 
-  return invalidPositions;
+  return invalidCells;
 };
 
-function getValueToPositionsMapping_(range) {
-  var values = range.getDisplayValues();
-
-  var valueToPositions = {};
-  for (var i = 0; i < values.length; i++) {
-    for (var j = 0; j < values[i].length; j++) {
-      var value = values[i][j];
-      var position = {
-        row: range.getRow() + i,
-        column: range.getColumn() + j
-      };
-
-      if (valueToPositions.hasOwnProperty(value)) {
-        valueToPositions[value].push(position);
-      }
-      else {
-        valueToPositions[value] = [position];
-      }
-    }
-  }
-
-  return valueToPositions;
-};
-
-function validateCell_(value, regex) {
+function validateValue_(value, regex) {
   var valid = false;
   var invalidChars = "";
 

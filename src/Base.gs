@@ -42,7 +42,7 @@ function clear() {
 function about() {
   var htmlOutput = HtmlService
      .createHtmlOutputFromFile("About")
-     .setSandboxMode(HtmlService.SandboxMode.NATIVE)
+     .setSandboxMode(HtmlService.SandboxMode.IFRAME)
      .setHeight(300);
   SpreadsheetApp.getUi().showModalDialog(htmlOutput, "About Keemei");
 };

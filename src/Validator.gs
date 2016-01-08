@@ -10,7 +10,7 @@ function findDuplicates_(valueToPositions, note) {
           duplicates.push(positions[i].a1);
         }
         var formattedDuplicates = duplicates.join(", ");
-        var message = Utilities.formatString("%s. Duplicates in %s", note, formattedDuplicates);
+        var message = [Utilities.formatString("%s. Duplicates in %s", note, formattedDuplicates)];
 
         for (var i = 0; i < positions.length; i++) {
           invalidCells[positions[i].a1] = {
@@ -27,7 +27,7 @@ function findDuplicates_(valueToPositions, note) {
 
 function findUnequalLengths_(valueToPositions, label) {
   var invalidCells = {};
-  var message = Utilities.formatString("%s length does not match the others", label);
+  var message = [Utilities.formatString("%s length does not match the others", label)];
   var lengthMode = lengthMode_(valueToPositions);
   for (var value in valueToPositions) {
     if (valueToPositions.hasOwnProperty(value)) {
@@ -83,7 +83,7 @@ function findMissingValues_(valueToPositions, requiredValues, label, range) {
   }
 
   if (missingValues.length > 0) {
-    var message = Utilities.formatString("Missing required %s: %s", label, missingValues.join(", "));
+    var message = [Utilities.formatString("Missing required %s: %s", label, missingValues.join(", "))];
 
     var row = range.getRow();
     var column = range.getColumn();
@@ -104,7 +104,7 @@ function findMissingValues_(valueToPositions, requiredValues, label, range) {
 
 function findLeadingTrailingWhitespaceCells_(valueToPositions) {
   var invalidCells = {};
-  var message = "Cell has leading and/or trailing whitespace characters";
+  var message = ["Cell has leading and/or trailing whitespace characters"];
 
   for (var value in valueToPositions) {
     if (valueToPositions.hasOwnProperty(value)) {
@@ -134,12 +134,12 @@ function findInvalidCells_(valueToPositions, regex, invalidCharactersErrorType,
       var status = validateValue_(value, regex);
 
       if (!status.valid) {
-        var message = "Empty cell";
+        var message = ["Empty cell"];
         var errorType = emptyCellErrorType;
         if (status.invalidChars.length > 0) {
-          message = Utilities.formatString("Invalid character(s) in %s: %s", label, status.invalidChars);
+          message = [Utilities.formatString("Invalid character(s) in %s: %s", label, status.invalidChars)];
           if (messageSuffix) {
-            message += Utilities.formatString("\n\n%s", messageSuffix);
+            message.push(messageSuffix);
           }
           errorType = invalidCharactersErrorType;
         }

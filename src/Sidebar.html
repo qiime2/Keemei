@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <?!= HtmlService.createHtmlOutputFromFile('Sidebar.css').getContent(); ?>
+  </head>
+  <body>
+    <div class="sidebar">
+    <? if (data.summary.invalidCount < 1) { ?>
+      <h1>All's well! Sheet <b><?= data.sheetName ?></b> is valid.</h1>
+    <? }
+    else { ?>
+      <div class="block">
+      <h1>Validation report for sheet <b><?= data.sheetName ?></b></h1>
+      <fieldset>
+        <legend>Summary</legend>
+        <b><?= data.summary.invalidCount ?></b> invalid cells<br/>
+        <b><?= data.summary.errorCount ?></b> errors<br/>
+        <b><?= data.summary.warningCount ?></b> warnings<br/>
+      </fieldset>
+      <fieldset>
+        <legend>Invalid cells</legend>
+        <div id="accordion">
+          <? for (var cellIdx = 0; cellIdx < data.invalidCells.length; cellIdx++) {
+              var cellResults = data.invalidCells[cellIdx];
+              var a1 = cellResults.position.a1; ?>
+              <h3>
+                <?= a1 ?>
+                <button class="cell-focus-button"
+                        data-sheet-id="<?!= data.sheetId ?>"
+                        data-a1="<?= a1 ?>">
+                  Focus cell
+                </button>
+              </h3>
+              <div>
+                <? if (cellResults.hasOwnProperty("errors")) { ?>
+                  <b>Errors:</b>
+                  <ul>
+                  <? for (var i = 0; i < cellResults.errors.length; i++) { ?>
+                    <li>
+                      <? for (var j = 0; j < cellResults.errors[i].length; j++) { ?>
+                        <?= cellResults.errors[i][j] ?>
+                        <? if (j !== cellResults.errors[i].length - 1) { ?>
+                          <br/><br/>
+                        <? } ?>
+                      <? } ?>
+                    </li>
+                  <? } ?>
+                  </ul>
+                  <? }
+                  if (cellResults.hasOwnProperty("warnings")) { ?>
+                    <b>Warnings:</b>
+                    <ul>
+                    <? for (var i = 0; i < cellResults.warnings.length; i++) { ?>
+                      <li>
+                        <? for (var j = 0; j < cellResults.warnings[i].length; j++) { ?>
+                          <?= cellResults.warnings[i][j] ?>
+                          <? if (j !== cellResults.warnings[i].length - 1) { ?>
+                            <br/><br/>
+                          <? } ?>
+                        <? } ?>
+                      </li>
+                    <? } ?>
+                    </ul>
+                  <? } ?>
+              </div>
+          <? } ?>
+        </div>
+      </fieldset>
+      </div>
+    <? } ?>
+    <div class="block">
+      <button class="close-button">Close</button>
+    </div>
+    </div>
+
+    <?!= HtmlService.createHtmlOutputFromFile('Sidebar.js').getContent(); ?>
+
+  </body>
+</html>

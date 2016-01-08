@@ -32,7 +32,7 @@ function findMisplacedColumns_(valueToPositions, requiredHeaders) {
 
       if (requiredHeaders.hasOwnProperty(value)) {
         var requiredLocation = requiredHeaders[value];
-        var message = "Misplaced column; must be the " + requiredLocation[1] + " column";
+        var message = ["Misplaced column; must be the " + requiredLocation[1] + " column"];
 
         for (var i = 0; i < positions.length; i++) {
           var position = positions[i];

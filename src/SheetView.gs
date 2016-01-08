@@ -26,13 +26,13 @@ function renderSheetView_(sheet, validationResults) {
       var note = [];
       if (cellResults.hasOwnProperty("errors") && cellResults["errors"].length > 0) {
         color = Color.ERROR;
-        note.push("ERRORS:\n\n" + cellResults["errors"].join("\n\n"));
+        note.push("ERRORS:\n\n" + buildNote_(cellResults["errors"]));
       }
       if (cellResults.hasOwnProperty("warnings") && cellResults["warnings"].length > 0) {
         if (color !== Color.ERROR) {
           color = Color.WARNING;
         }
-        note.push("WARNINGS:\n\n" + cellResults["warnings"].join("\n\n"));
+        note.push("WARNINGS:\n\n" + buildNote_(cellResults["warnings"]));
       }
       note = note.join("\n\n");
 
@@ -43,11 +43,6 @@ function renderSheetView_(sheet, validationResults) {
 
   range.setBackgrounds(state.colors);
   range.setNotes(state.notes);
-
-  if (Object.keys(validationResults).length < 1) {
-    var ui = SpreadsheetApp.getUi();
-    ui.alert("Valid spreadsheet", "All's well! Your spreadsheet is valid.", ui.ButtonSet.OK);
-  }
 };
 
 function initializeState_(range) {
@@ -69,4 +64,12 @@ function initializeGrid_(range, value) {
     grid.push(row);
   }
   return grid;
+};
+
+function buildNote_(messages) {
+  var joinedMessages = [];
+  for (var i = 0; i < messages.length; i++) {
+    joinedMessages.push(messages[i].join("\n\n"));
+  }
+  return joinedMessages.join("\n\n");
 };

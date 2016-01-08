@@ -1,0 +1,35 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+
+<script>
+$(function() {
+  $("#accordion").accordion({
+    active: false,
+    collapsible: true,
+    heightStyle: "content"
+  });
+
+  $('.cell-focus-button').button({
+    icons: {
+      primary: "ui-icon-search"
+    },
+    text: false
+  });
+
+  $('.cell-focus-button').click(function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    google.script.run.focus($(this).data("sheet-id"), $(this).data("a1"));
+    google.script.host.editor.focus();
+  });
+
+  $('.close-button').click(function(e) {
+    google.script.host.close();
+  });
+
+  // Workaround to fix broken sidebar scrollbar in Chrome.
+  // Remove when the following issue is resolved:
+  //   https://code.google.com/p/google-apps-script-issues/issues/detail?id=5164
+  parent.document.getElementById('userHtmlFrame').style.overflowY = "hidden";
+});
+</script>

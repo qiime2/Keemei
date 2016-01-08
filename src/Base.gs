@@ -33,6 +33,7 @@ function validate() {
   validationResults = mergeValidationResults_(validationResults);
 
   renderSheetView_(sheet, validationResults);
+  renderSidebarView_(sheet, validationResults);
 };
 
 function clear() {

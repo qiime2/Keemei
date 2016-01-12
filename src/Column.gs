@@ -18,10 +18,10 @@ function validateColumns_(sheetData) {
     switch(header) {
       case "#SampleID":
         validationResults.push(findDuplicates_(valueToPositions, "Duplicate sample ID"));
-        validationResults.push(findInvalidCells_(valueToPositions, /[a-z0-9.]+/ig, "warnings",
-                                                 "errors", "sample ID",
-                                                 "Only MIENS-compliant characters are allowed."));
-        validationResults.push(findLeadingTrailingWhitespaceCells_(valueToPositions));
+        validationResults.push(findInvalidCharacters_(valueToPositions, /[a-z0-9.]+/ig, "warnings",
+                                                      "errors", "sample ID",
+                                                      "Only MIENS-compliant characters are allowed."));
+        validationResults.push(findLeadingTrailingWhitespace_(valueToPositions));
         break;
 
       case "BarcodeSequence":
@@ -29,27 +29,27 @@ function validateColumns_(sheetData) {
         validationResults.push(findUnequalLengths_(valueToPositions, "Barcode"));
 
         // Check against IUPAC standard DNA characters (case-insensitive).
-        validationResults.push(findInvalidCells_(valueToPositions, /[acgt]+/ig, "errors",
-                                                 "errors", "barcode sequence",
-                                                 "Only IUPAC standard DNA characters are allowed."));
-        validationResults.push(findLeadingTrailingWhitespaceCells_(valueToPositions));
+        validationResults.push(findInvalidCharacters_(valueToPositions, /[acgt]+/ig, "errors",
+                                                      "errors", "barcode sequence",
+                                                      "Only IUPAC standard DNA characters are allowed."));
+        validationResults.push(findLeadingTrailingWhitespace_(valueToPositions));
         break;
 
       case "LinkerPrimerSequence":
       case "ReversePrimer":
         // Check against IUPAC DNA characters (case-insensitive). Allow commas
         // since comma-separated primers are valid.
-        validationResults.push(findInvalidCells_(valueToPositions, /[acbdghkmnsrtwvy,]+/ig, "errors",
-                                                 "errors", "primer sequence",
-                                                 "Only IUPAC DNA characters are allowed."));
-        validationResults.push(findLeadingTrailingWhitespaceCells_(valueToPositions));
+        validationResults.push(findInvalidCharacters_(valueToPositions, /[acbdghkmnsrtwvy,]+/ig, "errors",
+                                                      "errors", "primer sequence",
+                                                      "Only IUPAC DNA characters are allowed."));
+        validationResults.push(findLeadingTrailingWhitespace_(valueToPositions));
         break;
 
       default:
         // generic metadata column
-        validationResults.push(findInvalidCells_(valueToPositions, /[a-z0-9_.\-+% ;:,\/]+/ig, "warnings",
-                                                 "warnings", "metadata"));
-        validationResults.push(findLeadingTrailingWhitespaceCells_(valueToPositions));
+        validationResults.push(findInvalidCharacters_(valueToPositions, /[a-z0-9_.\-+% ;:,\/]+/ig, "warnings",
+                                                      "warnings", "metadata"));
+        validationResults.push(findLeadingTrailingWhitespace_(valueToPositions));
     }
   }
 

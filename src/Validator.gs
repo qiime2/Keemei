@@ -92,7 +92,7 @@ function findMissingValues_(valueToPositions, requiredValues, label, position) {
   return invalidCells;
 };
 
-function findLeadingTrailingWhitespaceCells_(valueToPositions) {
+function findLeadingTrailingWhitespace_(valueToPositions) {
   var invalidCells = {};
   var message = ["Cell has leading and/or trailing whitespace characters"];
 
@@ -114,13 +114,11 @@ function findLeadingTrailingWhitespaceCells_(valueToPositions) {
   return invalidCells;
 };
 
-function findInvalidCells_(valueToPositions, regex, invalidCharactersErrorType,
-                           emptyCellErrorType, label, messageSuffix, ignoredValues) {
-  ignoredValues = (typeof ignoredValues === "undefined") ? {} : ignoredValues;
-
+function findInvalidCharacters_(valueToPositions, regex, invalidCharactersErrorType,
+                                emptyCellErrorType, label, messageSuffix) {
   var invalidCells = {};
   for (var value in valueToPositions) {
-    if (valueToPositions.hasOwnProperty(value) && !ignoredValues.hasOwnProperty(value)) {
+    if (valueToPositions.hasOwnProperty(value)) {
       var status = validateValue_(value, regex);
 
       if (!status.valid) {

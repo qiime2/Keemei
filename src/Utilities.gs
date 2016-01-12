@@ -1,19 +1,15 @@
-function isSheetEmpty_(sheet) {
-  return sheet.getLastRow() == 0 && sheet.getLastColumn() == 0;
-};
-
 // modified from http://stackoverflow.com/a/4579228/3776794
 function startsWith_(str, substr) {
   return str.lastIndexOf(substr, 0) === 0;
 };
 
 // modified from http://stackoverflow.com/a/8241071/3776794
-function getA1Notation_(row, column) {
-  var columnIdx = column - 1;
-
+function getA1Notation_(position) {
   var ordA = "A".charCodeAt(0);
   var ordZ = "Z".charCodeAt(0);
   var len = ordZ - ordA + 1;
+  var rowIdx = position[0];
+  var columnIdx = position[1];
 
   var a1 = "";
   while (columnIdx >= 0) {
@@ -21,7 +17,7 @@ function getA1Notation_(row, column) {
     columnIdx = Math.floor(columnIdx / len) - 1;
   }
 
-  return Utilities.formatString("%s%d", a1, row);
+  return Utilities.formatString("%s%d", a1, rowIdx + 1);
 };
 
 // from http://stackoverflow.com/a/15479354/3776794
@@ -41,22 +37,15 @@ function naturalCompare_(a, b) {
     return ax.length - bx.length;
 };
 
-function getValueToPositionsMapping_(range) {
-  var values = range.getDisplayValues();
-
+function getValueToPositionsMapping_(sheetData, rowIdx, columnIdx, numRows, numColumns) {
   var valueToPositions = {};
-  for (var i = 0; i < values.length; i++) {
-    for (var j = 0; j < values[i].length; j++) {
-      var row = range.getRow() + i;
-      var column = range.getColumn() + j;
-      var a1 = getA1Notation_(row, column);
-      var position = {
-        row: row,
-        column: column,
-        a1: a1
-      };
+  for (var i = 0; i < numRows; i++) {
+    for (var j = 0; j < numColumns; j++) {
+      var currRowIdx = rowIdx + i;
+      var currColumnIdx = columnIdx + j;
+      var position = [currRowIdx, currColumnIdx];
 
-      var value = values[i][j];
+      var value = sheetData[currRowIdx][currColumnIdx];
       if (valueToPositions.hasOwnProperty(value)) {
         valueToPositions[value].push(position);
       }

@@ -7,6 +7,9 @@
 ### Features
 * Added sidebar interface to display validation report and locate invalid cells ([#7](https://github.com/biocore/Keemei/issues/7))
 
+### Performance enhancements
+* Keemei is now ~10x faster and supports validating much larger sheets than was previously possible ([#29](https://github.com/biocore/Keemei/issues/29))
+
 ### Bug fixes
 * Validation of currency-formatted numbers (e.g., `(42.45)`) and other number/date formats now works as expected. Previous behavior was to mark as an empty cell if a cell's display value could not be computed by the [SheetConverter](https://sites.google.com/site/scriptsexamples/custom-methods/sheetconverter) library. Now uses the recently added `Range.getDisplayValues()` API in favor of SheetConverter, which also has improved performance ([#28](https://github.com/biocore/Keemei/issues/28))
 

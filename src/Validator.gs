@@ -7,13 +7,12 @@ function findDuplicates_(valueToPositions, note) {
       if (positions.length > 1) {
         var duplicates = [];
         for (var i = 0; i < positions.length; i++) {
-          duplicates.push(positions[i].a1);
+          duplicates.push(getA1Notation_(positions[i]));
         }
-        var formattedDuplicates = duplicates.join(", ");
-        var message = [Utilities.formatString("%s. Duplicates in %s", note, formattedDuplicates)];
+        var message = [Utilities.formatString("%s. Duplicates in %s", note, duplicates.join(", "))];
 
         for (var i = 0; i < positions.length; i++) {
-          invalidCells[positions[i].a1] = {
+          invalidCells[duplicates[i]] = {
             "position": positions[i],
             "errors": [message]
           };
@@ -35,7 +34,7 @@ function findUnequalLengths_(valueToPositions, label) {
         var positions = valueToPositions[value];
 
         for (var i = 0; i < positions.length; i++) {
-          invalidCells[positions[i].a1] = {
+          invalidCells[getA1Notation_(positions[i])] = {
             "position": positions[i],
             "warnings": [message]
           };
@@ -70,7 +69,7 @@ function lengthMode_(valueToPositions) {
   return mode;
 };
 
-function findMissingValues_(valueToPositions, requiredValues, label, range) {
+function findMissingValues_(valueToPositions, requiredValues, label, position) {
   var invalidCells = {};
 
   var missingValues = [];
@@ -84,16 +83,7 @@ function findMissingValues_(valueToPositions, requiredValues, label, range) {
 
   if (missingValues.length > 0) {
     var message = [Utilities.formatString("Missing required %s: %s", label, missingValues.join(", "))];
-
-    var row = range.getRow();
-    var column = range.getColumn();
-    var a1 = getA1Notation_(row, column);
-    var position = {
-      row: row,
-      column: column,
-      a1: a1
-    };
-    invalidCells[position.a1] = {
+    invalidCells[getA1Notation_(position)] = {
       "position": position,
       "errors": [message]
     };
@@ -112,7 +102,7 @@ function findLeadingTrailingWhitespaceCells_(valueToPositions) {
         var positions = valueToPositions[value];
 
         for (var i = 0; i < positions.length; i++) {
-          invalidCells[positions[i].a1] = {
+          invalidCells[getA1Notation_(positions[i])] = {
             "position": positions[i],
             "warnings": [message]
           };
@@ -150,7 +140,7 @@ function findInvalidCells_(valueToPositions, regex, invalidCharactersErrorType,
             "position": positions[i]
           };
           invalidCell[errorType] = [message];
-          invalidCells[positions[i].a1] = invalidCell;
+          invalidCells[getA1Notation_(positions[i])] = invalidCell;
         }
       }
     }

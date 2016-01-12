@@ -21,9 +21,9 @@
       <fieldset>
         <legend>Invalid cells</legend>
         <div id="accordion">
-          <? for (var cellIdx = 0; cellIdx < data.invalidCells.length; cellIdx++) {
-              var cellResults = data.invalidCells[cellIdx];
-              var a1 = cellResults.position.a1; ?>
+          <? for (var cellIdx = 0; cellIdx < data.cellOrder.length; cellIdx++) {
+              var a1 = data.cellOrder[cellIdx];
+              var cellResults = data.validationResults[a1]; ?>
               <h3>
                 <?= a1 ?>
                 <button class="cell-focus-button"

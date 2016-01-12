@@ -14,13 +14,15 @@ function resetSheetView_(sheet) {
 
 function renderSheetView_(sheet, validationResults) {
   var range = sheet.getDataRange();
-  var state = initializeState_(range);
+  var numRows = range.getNumRows();
+  var numColumns = range.getNumColumns();
+  var state = initializeState_(numRows, numColumns);
 
   for (var a1 in validationResults) {
     if (validationResults.hasOwnProperty(a1)) {
       var cellResults = validationResults[a1];
-      var rowIdx = cellResults["position"].row - 1;
-      var columnIdx = cellResults["position"].column - 1;
+      var rowIdx = cellResults["position"][0];
+      var columnIdx = cellResults["position"][1];
 
       var color = Color.RESET;
       var note = [];
@@ -45,20 +47,18 @@ function renderSheetView_(sheet, validationResults) {
   range.setNotes(state.notes);
 };
 
-function initializeState_(range) {
-  colors = initializeGrid_(range, Color.RESET);
-  notes = initializeGrid_(range, "");
+function initializeState_(numRows, numColumns) {
   return {
-    colors: colors,
-    notes: notes
+    colors: initializeGrid_(numRows, numColumns, Color.RESET),
+    notes: initializeGrid_(numRows, numColumns, "")
   };
 };
 
-function initializeGrid_(range, value) {
+function initializeGrid_(numRows, numColumns, value) {
   var grid = [];
-  for (var i = 0; i < range.getNumRows(); i++) {
+  for (var i = 0; i < numRows; i++) {
     var row = [];
-    for (var j = 0; j < range.getNumColumns(); j++) {
+    for (var j = 0; j < numColumns; j++) {
       row.push(value);
     }
     grid.push(row);

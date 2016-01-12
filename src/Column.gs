@@ -1,20 +1,20 @@
 // TODO: the validations applied to each column are hardcoded for QIIME metadata
-function validateColumns_(sheet) {
-  var startRow = getMetadataStartRow_(sheet);
-  var lastRow = sheet.getLastRow();
+function validateColumns_(sheetData) {
+  var startRowIdx = getStartRowIdx_(sheetData);
+  var endRowIdx = sheetData.length - 1;
+  var numRows = endRowIdx - startRowIdx + 1;
 
-  if (startRow > lastRow) {
+  if (startRowIdx > endRowIdx) {
     // no metadata, only header and/or comments
     return {};
   }
 
-  var headers = getHeaderRange_(sheet).getDisplayValues();
+  var headers = sheetData[0];
   var validationResults = [];
-  for (var column = 1; column <= sheet.getLastColumn(); column++) {
-    var columnRange = sheet.getRange(startRow, column, lastRow - startRow + 1);
-    var valueToPositions = getValueToPositionsMapping_(columnRange);
+  for (var columnIdx = 0; columnIdx < headers.length; columnIdx++) {
+    var valueToPositions = getValueToPositionsMapping_(sheetData, startRowIdx, columnIdx, numRows, 1);
 
-    var header = headers[0][column - 1];
+    var header = headers[columnIdx];
     switch(header) {
       case "#SampleID":
         validationResults.push(findDuplicates_(valueToPositions, "Duplicate sample ID"));
@@ -56,20 +56,11 @@ function validateColumns_(sheet) {
   return mergeValidationResults_(validationResults);
 };
 
-function getMetadataStartRow_(sheet) {
-  var startRow = 2;
-  for (var row = startRow; row <= sheet.getLastRow(); row++) {
-    // TODO: this should be optimized to pull the entire
-    // first column in order to reduce API calls
-    var value = sheet.getRange(row, 1).getDisplayValues()[0][0];
-
-    if (startsWith_(value, "#")) {
-      startRow++;
-    }
-    else {
+function getStartRowIdx_(sheetData) {
+  for (var i = 1; i < sheetData.length; i++) {
+    if (!startsWith_(sheetData[i][0], "#")) {
       break;
     }
   }
-
-  return startRow;
+  return i;
 };

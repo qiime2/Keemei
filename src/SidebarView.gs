@@ -18,21 +18,18 @@ function renderSidebarView_(sheet, validationResults) {
 
   // Perform natural sort of cells based on A1 notation.
   // TODO: improve sorting so that B1 comes before AA1, etc.
-  var sortedCells = Object.keys(validationResults).sort(naturalCompare_);
-  var invalidCells = [];
-  for (var i = 0; i < sortedCells.length; i++) {
-    invalidCells.push(validationResults[sortedCells[i]]);
-  }
+  var cellOrder = Object.keys(validationResults).sort(naturalCompare_);
 
   sidebar.data = {
     sheetId: sheet.getSheetId(),
     sheetName: sheet.getSheetName(),
     summary: {
-      invalidCount: sortedCells.length,
+      invalidCount: cellOrder.length,
       errorCount: errorCount,
       warningCount: warningCount
     },
-    invalidCells: invalidCells
+    cellOrder: cellOrder,
+    validationResults: validationResults
   };
 
   SpreadsheetApp.getUi().showSidebar(sidebar.evaluate()

@@ -12,24 +12,19 @@ function onOpen(e) {
 
 function validate() {
   var sheet = SpreadsheetApp.getActiveSheet();
-
-  if (isSheetEmpty_(sheet)) {
-    var ui = SpreadsheetApp.getUi();
-    ui.alert("Empty spreadsheet", "There is nothing to validate because the spreadsheet is empty.", ui.ButtonSet.OK);
-    return;
-  }
+  var sheetData = sheet.getDataRange().getDisplayValues();
 
   // TODO: required headers and their locations are currently hardcoded for QIIME metadata
   var requiredHeaders = {
-    "#SampleID": [1, "first"],
-    "BarcodeSequence": [2, "second"],
-    "LinkerPrimerSequence": [3, "third"],
-    "Description": [sheet.getLastColumn(), "last"]
+    "#SampleID": [0, "first"],
+    "BarcodeSequence": [1, "second"],
+    "LinkerPrimerSequence": [2, "third"],
+    "Description": [sheetData[0].length - 1, "last"]
   };
 
   var validationResults = [];
-  validationResults.push(validateHeader_(sheet, requiredHeaders));
-  validationResults.push(validateColumns_(sheet));
+  validationResults.push(validateHeader_(sheetData, requiredHeaders));
+  validationResults.push(validateColumns_(sheetData));
   validationResults = mergeValidationResults_(validationResults);
 
   renderSheetView_(sheet, validationResults);

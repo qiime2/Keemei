@@ -12,12 +12,13 @@ function resetSheetView_(sheet) {
   range.clearNote();
 };
 
-function renderSheetView_(sheet, validationResults) {
+function renderSheetView_(sheet, report) {
   var range = sheet.getDataRange();
   var numRows = range.getNumRows();
   var numColumns = range.getNumColumns();
   var state = initializeState_(numRows, numColumns);
 
+  var validationResults = report.validationResults;
   for (var a1 in validationResults) {
     if (validationResults.hasOwnProperty(a1)) {
       var cellResults = validationResults[a1];

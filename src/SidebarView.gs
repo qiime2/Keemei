@@ -1,8 +1,9 @@
-function renderSidebarView_(sheet, validationResults) {
+function renderSidebarView_(sheet, report) {
   var sidebar = HtmlService.createTemplateFromFile('Sidebar');
 
   var errorCount = 0;
   var warningCount = 0;
+  var validationResults = report.validationResults;
   for (var a1 in validationResults) {
     if (validationResults.hasOwnProperty(a1)) {
       var cellResults = validationResults[a1];
@@ -23,6 +24,7 @@ function renderSidebarView_(sheet, validationResults) {
   sidebar.data = {
     sheetId: sheet.getSheetId(),
     sheetName: sheet.getSheetName(),
+    format: report.format,
     summary: {
       invalidCount: cellOrder.length,
       errorCount: errorCount,

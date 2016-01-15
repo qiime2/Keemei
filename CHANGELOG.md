@@ -6,6 +6,7 @@
 
 ### Features
 * Added sidebar interface to display validation report and locate invalid cells ([#7](https://github.com/biocore/Keemei/issues/7))
+* Added support for validating SRGD files (e.g., for use in [geneGIS](http://genegis.org/)) ([#51](https://github.com/biocore/Keemei/issues/51))
 
 ### Performance enhancements
 * Keemei is now ~10x faster and supports validating much larger sheets than was previously possible ([#29](https://github.com/biocore/Keemei/issues/29))

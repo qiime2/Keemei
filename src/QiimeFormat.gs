@@ -1,14 +1,4 @@
-function validateQiime_(sheetData) {
-  return {
-    format: "QIIME mapping file",
-    validationResults: mergeValidationResults_([
-      validateHeader_(sheetData),
-      validateColumns_(sheetData)
-    ])
-  };
-}
-
-function validateHeader_(sheetData) {
+function getQiimeFormatSpec_(sheetData) {
   var requiredHeaders = {
     "#SampleID": [0, "first"],
     "BarcodeSequence": [1, "second"],
@@ -16,103 +6,146 @@ function validateHeader_(sheetData) {
     "Description": [sheetData[0].length - 1, "last"]
   };
 
-  var valueToPositions = getValueToPositionsMapping_(sheetData, 0, 0, 1, sheetData[0].length);
-
-  var validationResults = [];
-  validationResults.push(findMissingValues_(valueToPositions, requiredHeaders, "columns", [0, 0]));
-  validationResults.push(findDuplicates_(valueToPositions, "Duplicate column"));
-
-  // #SampleID is an invalid column header name, so we'll only check header names
-  // if they aren't required headers. Assume the required header names are valid.
-  validationResults.push(findInvalidColumns_(valueToPositions, requiredHeaders));
-
-  validationResults.push(findMisplacedColumns_(valueToPositions, requiredHeaders));
-  validationResults.push(findLeadingTrailingWhitespace_(valueToPositions));
-
-  return mergeValidationResults_(validationResults);
+  return {
+    format: "QIIME mapping file",
+    headerRowIdx: 0,
+    dataStartRowIdx: getQiimeDataStartRowIdx_(sheetData),
+    headerValidation: [
+      {
+        validator: findMissingValues_,
+        args: [requiredHeaders, "columns", [0, 0]]
+      },
+      {
+        validator: findDuplicates_,
+        args: ["Duplicate column"]
+      },
+      {
+        // #SampleID is an invalid column header name, so we'll only check header names
+        // if they aren't required headers. Assume the required header names are valid.
+        validator: findInvalidQiimeColumns_,
+        args: [requiredHeaders]
+      },
+      {
+        validator: findMisplacedQiimeColumns_,
+        args: [requiredHeaders]
+      },
+      {
+        validator: findEmpty_,
+        args: ["errors"]
+      },
+      {
+        validator: findLeadingTrailingWhitespace_,
+        args: []
+      }
+    ],
+    columnValidation: {
+      "default": [
+        {
+          validator: findInvalidCharacters_,
+          args: [/[a-z0-9_.\-+% ;:,\/]/ig, "warnings", "metadata"]
+        },
+        {
+          validator: findEmpty_,
+          args: ["warnings"]
+        },
+        {
+          validator: findLeadingTrailingWhitespace_,
+          args: []
+        }
+      ],
+      columns: {
+        "#SampleID": [
+          {
+            validator: findDuplicates_,
+            args: ["Duplicate sample ID"]
+          },
+          {
+            validator: findInvalidCharacters_,
+            args: [/[a-z0-9.]/ig, "warnings", "sample ID", "Only MIENS-compliant characters are allowed."]
+          },
+          {
+            validator: findEmpty_,
+            args: ["errors"]
+          },
+          {
+            validator: findLeadingTrailingWhitespace_,
+            args: []
+          }
+        ],
+        "BarcodeSequence": [
+          {
+            validator: findDuplicates_,
+            args: ["Duplicate barcode sequence"]
+          },
+          {
+            validator: findUnequalLengths_,
+            args: ["Barcode"]
+          },
+          {
+            // Check against IUPAC standard DNA characters (case-insensitive).
+            validator: findInvalidCharacters_,
+            args: [/[acgt]/ig, "errors", "barcode sequence", "Only IUPAC standard DNA characters are allowed."]
+          },
+          {
+            validator: findEmpty_,
+            args: ["errors"]
+          },
+          {
+            validator: findLeadingTrailingWhitespace_,
+            args: []
+          }
+        ],
+        "LinkerPrimerSequence": getPrimerValidators(),
+        "ReversePrimer": getPrimerValidators()
+      }
+    }
+  };
 };
 
-function validateColumns_(sheetData) {
-  var startRowIdx = getStartRowIdx_(sheetData);
-  var endRowIdx = sheetData.length - 1;
-  var numRows = endRowIdx - startRowIdx + 1;
+function getPrimerValidators() {
+  return [
+    {
+      // Check against IUPAC DNA characters (case-insensitive). Allow commas
+      // since comma-separated primers are valid.
+      validator: findInvalidCharacters_,
+      args: [/[acbdghkmnsrtwvy,]/ig, "errors", "primer sequence", "Only IUPAC DNA characters are allowed."]
+    },
+    {
+      validator: findEmpty_,
+      args: ["errors"]
+    },
+    {
+      validator: findLeadingTrailingWhitespace_,
+      args: []
+    }
+  ];
+};
 
-  if (startRowIdx > endRowIdx) {
-    // no metadata, only header and/or comments
-    return {};
-  }
-
-  var headers = sheetData[0];
-  var validationResults = [];
-  for (var columnIdx = 0; columnIdx < headers.length; columnIdx++) {
-    var valueToPositions = getValueToPositionsMapping_(sheetData, startRowIdx, columnIdx, numRows, 1);
-
-    var header = headers[columnIdx];
-    switch(header) {
-      case "#SampleID":
-        validationResults.push(findDuplicates_(valueToPositions, "Duplicate sample ID"));
-        validationResults.push(findInvalidCharacters_(valueToPositions, /[a-z0-9.]+/ig, "warnings",
-                                                      "errors", "sample ID",
-                                                      "Only MIENS-compliant characters are allowed."));
-        validationResults.push(findLeadingTrailingWhitespace_(valueToPositions));
-        break;
-
-      case "BarcodeSequence":
-        validationResults.push(findDuplicates_(valueToPositions, "Duplicate barcode sequence"));
-        validationResults.push(findUnequalLengths_(valueToPositions, "Barcode"));
-
-        // Check against IUPAC standard DNA characters (case-insensitive).
-        validationResults.push(findInvalidCharacters_(valueToPositions, /[acgt]+/ig, "errors",
-                                                      "errors", "barcode sequence",
-                                                      "Only IUPAC standard DNA characters are allowed."));
-        validationResults.push(findLeadingTrailingWhitespace_(valueToPositions));
-        break;
-
-      case "LinkerPrimerSequence":
-      case "ReversePrimer":
-        // Check against IUPAC DNA characters (case-insensitive). Allow commas
-        // since comma-separated primers are valid.
-        validationResults.push(findInvalidCharacters_(valueToPositions, /[acbdghkmnsrtwvy,]+/ig, "errors",
-                                                      "errors", "primer sequence",
-                                                      "Only IUPAC DNA characters are allowed."));
-        validationResults.push(findLeadingTrailingWhitespace_(valueToPositions));
-        break;
-
-      default:
-        // generic metadata column
-        validationResults.push(findInvalidCharacters_(valueToPositions, /[a-z0-9_.\-+% ;:,\/]+/ig, "warnings",
-                                                      "warnings", "metadata"));
-        validationResults.push(findLeadingTrailingWhitespace_(valueToPositions));
+function getQiimeDataStartRowIdx_(sheetData) {
+  for (var i = 1; i < sheetData.length; i++) {
+    if (!startsWith_(sheetData[i][0], "#")) {
+      break;
     }
   }
-
-  return mergeValidationResults_(validationResults);
+  return i;
 };
 
-function findInvalidColumns_(valueToPositions, ignoredValues) {
+function findInvalidQiimeColumns_(valueToPositions, ignoredValues) {
   var invalidCells = {};
+  var message = [
+    Utilities.formatString("Invalid column header name. Only alphanumeric and underscore characters are allowed. The first character must be a letter.")
+  ];
+
   for (var value in valueToPositions) {
-    if (valueToPositions.hasOwnProperty(value) && !ignoredValues.hasOwnProperty(value)) {
-      var status = validateValue_(value, /^[a-z][a-z0-9_]*$/ig);
-
-      if (!status.valid) {
-        var message = ["Empty cell"];
-        var errorType = "errors";
-        if (status.invalidChars.length > 0) {
-          message = [
-            Utilities.formatString("Invalid column header name. Only alphanumeric and underscore characters are allowed. The first character must be a letter.")
-          ];
-          errorType = "warnings";
-        }
-
-        var positions = valueToPositions[value];
-        for (var i = 0; i < positions.length; i++) {
-          var invalidCell = {
-            "position": positions[i]
-          };
-          invalidCell[errorType] = [message];
-          invalidCells[getA1Notation_(positions[i])] = invalidCell;
-        }
+    if (valueToPositions.hasOwnProperty(value) &&
+        !ignoredValues.hasOwnProperty(value) &&
+        (value.match(/^[a-z][a-z0-9_]*$/ig) === null)) {
+      var positions = valueToPositions[value];
+      for (var i = 0; i < positions.length; i++) {
+        invalidCells[getA1Notation_(positions[i])] = {
+          "position": positions[i],
+          "warnings": [message]
+        };
       }
     }
   }
@@ -120,7 +153,7 @@ function findInvalidColumns_(valueToPositions, ignoredValues) {
   return invalidCells;
 };
 
-function findMisplacedColumns_(valueToPositions, requiredHeaders) {
+function findMisplacedQiimeColumns_(valueToPositions, requiredHeaders) {
   var invalidCells = {};
   for (var value in valueToPositions) {
     if (valueToPositions.hasOwnProperty(value)) {
@@ -145,13 +178,4 @@ function findMisplacedColumns_(valueToPositions, requiredHeaders) {
   }
 
   return invalidCells;
-};
-
-function getStartRowIdx_(sheetData) {
-  for (var i = 1; i < sheetData.length; i++) {
-    if (!startsWith_(sheetData[i][0], "#")) {
-      break;
-    }
-  }
-  return i;
 };

@@ -4,31 +4,19 @@ function onInstall(e) {
 
 function onOpen(e) {
   SpreadsheetApp.getUi().createAddonMenu()
-      .addItem("Validate QIIME mapping file", "validate")
+      .addItem("Validate QIIME mapping file", "validateQiime")
+      .addItem("Validate SRGD file", "validateSrgd")
       .addItem("Clear validation status", "clear")
       .addItem("About", "about")
       .addToUi();
 };
 
-function validate() {
-  var sheet = SpreadsheetApp.getActiveSheet();
-  var sheetData = sheet.getDataRange().getDisplayValues();
+function validateQiime() {
+  return validate_(getQiimeFormatSpec_);
+};
 
-  // TODO: required headers and their locations are currently hardcoded for QIIME metadata
-  var requiredHeaders = {
-    "#SampleID": [0, "first"],
-    "BarcodeSequence": [1, "second"],
-    "LinkerPrimerSequence": [2, "third"],
-    "Description": [sheetData[0].length - 1, "last"]
-  };
-
-  var validationResults = [];
-  validationResults.push(validateHeader_(sheetData, requiredHeaders));
-  validationResults.push(validateColumns_(sheetData));
-  validationResults = mergeValidationResults_(validationResults);
-
-  renderSheetView_(sheet, validationResults);
-  renderSidebarView_(sheet, validationResults);
+function validateSrgd() {
+  return validate_(getSrgdFormatSpec_);
 };
 
 function clear() {

@@ -1,7 +1,9 @@
-function findDuplicates_(valueToPositions, note) {
+function findDuplicates_(valueToPositions, note, ignoreFunction) {
+  ignoreFunction = (typeof ignoreFunction === 'undefined') ? function(value) {return false;} : ignoreFunction;
+
   var invalidCells = {};
   for (var value in valueToPositions) {
-    if (valueToPositions.hasOwnProperty(value)) {
+    if (valueToPositions.hasOwnProperty(value) && !ignoreFunction(value)) {
       var positions = valueToPositions[value];
 
       if (positions.length > 1) {
@@ -69,6 +71,37 @@ function lengthMode_(valueToPositions) {
   return mode;
 };
 
+function findOutOfRange_(valueToPositions, min, max, label) {
+  var invalidCells = {};
+  var notANumberMessage = [Utilities.formatString("%s must be a number", label)];
+  var outOfRangeMessage = [Utilities.formatString("%s must be between %d and %d, inclusive", label, min, max)];
+
+  for (var value in valueToPositions) {
+    if (valueToPositions.hasOwnProperty(value)) {
+      var errors = [];
+      if (!isNumeric_(value)) {
+        errors.push(notANumberMessage);
+      }
+      else if (!between(parseFloat(value), min, max)) {
+        errors.push(outOfRangeMessage);
+      }
+
+      if (errors.length > 0) {
+        var positions = valueToPositions[value];
+
+        for (var i = 0; i < positions.length; i++) {
+          invalidCells[getA1Notation_(positions[i])] = {
+            "position": positions[i],
+            "errors": errors
+          };
+        }
+      }
+    }
+  }
+
+  return invalidCells;
+};
+
 function findMissingValues_(valueToPositions, requiredValues, label, position) {
   var invalidCells = {};
 
@@ -114,22 +147,35 @@ function findLeadingTrailingWhitespace_(valueToPositions) {
   return invalidCells;
 };
 
-function findInvalidCharacters_(valueToPositions, regex, invalidCharactersErrorType,
-                                emptyCellErrorType, label, messageSuffix) {
+function findEmpty_(valueToPositions, errorType) {
+  var invalidCells = {};
+  var message = ["Empty cell"];
+
+  if (valueToPositions.hasOwnProperty("")) {
+    var positions = valueToPositions[""];
+
+    for (var i = 0; i < positions.length; i++) {
+      var invalidCell = {
+        "position": positions[i]
+      };
+      invalidCell[errorType] = [message];
+      invalidCells[getA1Notation_(positions[i])] = invalidCell;
+    }
+  }
+
+  return invalidCells;
+};
+
+function findInvalidCharacters_(valueToPositions, regex, errorType, label, messageSuffix) {
   var invalidCells = {};
   for (var value in valueToPositions) {
     if (valueToPositions.hasOwnProperty(value)) {
-      var status = validateValue_(value, regex);
+      var invalidChars = value.replace(regex, "");
 
-      if (!status.valid) {
-        var message = ["Empty cell"];
-        var errorType = emptyCellErrorType;
-        if (status.invalidChars.length > 0) {
-          message = [Utilities.formatString("Invalid character(s) in %s: %s", label, status.invalidChars)];
-          if (messageSuffix) {
-            message.push(messageSuffix);
-          }
-          errorType = invalidCharactersErrorType;
+      if (invalidChars.length > 0) {
+        var message = [Utilities.formatString("Invalid character(s) in %s: %s", label, invalidChars)];
+        if (messageSuffix) {
+          message.push(messageSuffix);
         }
 
         var positions = valueToPositions[value];
@@ -145,21 +191,4 @@ function findInvalidCharacters_(valueToPositions, regex, invalidCharactersErrorT
   }
 
   return invalidCells;
-};
-
-function validateValue_(value, regex) {
-  var valid = false;
-  var invalidChars = "";
-
-  if (value.length > 0) {
-    invalidChars = value.replace(regex, "");
-
-    if (invalidChars.length == 0)
-      valid = true;
-  }
-
-  return {
-    valid: valid,
-    invalidChars: invalidChars
-  };
 };

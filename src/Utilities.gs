@@ -3,6 +3,16 @@ function startsWith_(str, substr) {
   return str.lastIndexOf(substr, 0) === 0;
 };
 
+// from http://stackoverflow.com/a/9716488/3776794
+function isNumeric_(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+};
+
+// from http://stackoverflow.com/a/6454237/3776794
+function between(x, min, max) {
+  return x >= min && x <= max;
+};
+
 // modified from http://stackoverflow.com/a/8241071/3776794
 function getA1Notation_(position) {
   var ordA = "A".charCodeAt(0);
@@ -35,60 +45,4 @@ function naturalCompare_(a, b) {
     }
 
     return ax.length - bx.length;
-};
-
-function getValueToPositionsMapping_(sheetData, rowIdx, columnIdx, numRows, numColumns) {
-  var valueToPositions = {};
-  for (var i = 0; i < numRows; i++) {
-    for (var j = 0; j < numColumns; j++) {
-      var currRowIdx = rowIdx + i;
-      var currColumnIdx = columnIdx + j;
-      var position = [currRowIdx, currColumnIdx];
-
-      var value = sheetData[currRowIdx][currColumnIdx];
-      if (valueToPositions.hasOwnProperty(value)) {
-        valueToPositions[value].push(position);
-      }
-      else {
-        valueToPositions[value] = [position];
-      }
-    }
-  }
-
-  return valueToPositions;
-};
-
-function mergeValidationResults_(validationResults) {
-  var dest = {};
-  for (var i = 0; i < validationResults.length; i++) {
-    var src = validationResults[i];
-
-    for (var a1 in src) {
-      if (src.hasOwnProperty(a1)) {
-        if (dest.hasOwnProperty(a1)) {
-          var srcCell = src[a1];
-          var destCell = dest[a1];
-
-          if (srcCell.hasOwnProperty("errors")) {
-            if (!destCell.hasOwnProperty("errors")) {
-              destCell["errors"] = [];
-            }
-            destCell["errors"] = destCell["errors"].concat(srcCell["errors"]);
-          }
-
-          if (srcCell.hasOwnProperty("warnings")) {
-            if (!destCell.hasOwnProperty("warnings")) {
-              destCell["warnings"] = [];
-            }
-            destCell["warnings"] = destCell["warnings"].concat(srcCell["warnings"]);
-          }
-        }
-        else {
-          dest[a1] = src[a1];
-        }
-      }
-    }
-  }
-
-  return dest;
 };

@@ -2,15 +2,17 @@
 
 [![Join the chat at https://gitter.im/biocore/Keemei](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/biocore/Keemei?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-*Validate bioinformatics metadata in Google Sheets*
+*Validate tabular bioinformatics file formats in Google Sheets*
 
-Keemei (canonically pronounced *key may*) is an open source [Google Sheets](http://www.google.com/sheets/about/) add-on for validating bioinformatics metadata, including [QIIME](http://qiime.org/) mapping files.
+Keemei (canonically pronounced *key may*) is an open source [Google Sheets](http://www.google.com/sheets/about/) add-on for validating tabular bioinformatics file formats, including [QIIME](http://qiime.org/) mapping files.
 
 To get started using Keemei, visit [keemei.qiime.org](http://keemei.qiime.org).
 
 ## Licensing
 
 Keemei is available under the new BSD license. See [LICENSE](LICENSE) for Keemei's license.
+
+Keemei uses and distributes [Moment.js](http://momentjs.com/), available under the MIT license. See [licenses/Moment.js.txt](licenses/Moment.js.txt).
 
 ## Credits
 

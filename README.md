@@ -16,4 +16,4 @@ Keemei uses and distributes [Moment.js](http://momentjs.com/), available under t
 
 ## Credits
 
-Keemei was developed by [Jai Ram Rideout](http://caporasolab.us/people/jai-rideout) ([@jairideout](https://github.com/jairideout)) in the [Caporaso Lab](http://caporasolab.us). See the full list of Keemei's contributors [here](https://github.com/biocore/Keemei/graphs/contributors). Keemei’s logo was created by John Chase ([@johnchase](https://github.com/johnchase)).
+Keemei was developed by Jai Ram Rideout ([@jairideout](https://github.com/jairideout)) in the [Caporaso Lab](http://caporasolab.us). See the full list of Keemei's contributors [here](https://github.com/biocore/Keemei/graphs/contributors). Keemei’s logo was created by John Chase ([@johnchase](https://github.com/johnchase)).

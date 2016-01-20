@@ -82,6 +82,17 @@ hr {
     margin-top: 40px;
 }
 
+/*
+ * Remove extra padding/margin in ol/ul list items that get wrapped in <p>,
+ * e.g., when including an image in the list item.
+ */
+.container ol p, .container ul p {
+  padding: 0 0;
+}
+.container ol p:first-of-type, .container ul p:first-of-type {
+    margin-top: 0;
+}
+
 /* keep embedded videos fluid! */
 .icontain {
   position: relative;

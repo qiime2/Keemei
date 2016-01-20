@@ -15,9 +15,9 @@ highlighter: pygments
 
 
 ### content configuration ###
-title:       "Keemei: Validate bioinformatics metadata in Google Sheets"
-keywords:    "Keemei, bioinformatics, metadata, validation, QIIME, qiime, Google Sheets, add-on, spreadsheet"
-description: "Keemei is an open source Google Sheets add-on for validating bioinformatics metadata, including QIIME mapping files."
+title:       "Keemei: Validate tabular bioinformatics file formats in Google Sheets"
+keywords:    "Keemei, tabular, bioinformatics, metadata, validation, validate, QIIME, qiime, Google Sheets, add-on, spreadsheet, file format"
+description: "Keemei is an open source Google Sheets add-on for validating tabular bioinformatics file formats, including QIIME mapping files."
 source_link: "https://github.com/biocore/Keemei"
 favicon:     "/favicon.ico"
 touch_icon:

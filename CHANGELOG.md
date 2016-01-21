@@ -4,6 +4,9 @@
 
 ## Development version
 
+### Features
+* Improved error message clarity for misplaced columns in QIIME mapping files ([#63](https://github.com/biocore/Keemei/issues/63))
+
 ### Bug fixes
 * Removed broken link from "About" dialog
 

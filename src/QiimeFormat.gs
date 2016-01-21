@@ -161,7 +161,7 @@ function findMisplacedQiimeColumns_(valueToPositions, requiredHeaders) {
 
       if (requiredHeaders.hasOwnProperty(value)) {
         var requiredLocation = requiredHeaders[value];
-        var message = ["Misplaced column; must be the " + requiredLocation[1] + " column"];
+        var message = [Utilities.formatString("Misplaced column; \"%s\" must be the %s column", value, requiredLocation[1])];
 
         for (var i = 0; i < positions.length; i++) {
           var position = positions[i];

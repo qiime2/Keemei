@@ -8,6 +8,7 @@
 * Improved error message clarity for misplaced columns in QIIME mapping files ([#63](https://github.com/biocore/Keemei/issues/63))
 
 ### Bug fixes
+* Fixed issue where cell background colors and notes would remain as display artifacts when re-validating or clearing validation status of a sheet with a smaller data range ([#64](https://github.com/biocore/Keemei/issues/64))
 * Removed broken link from "About" dialog
 
 ## Version 6 (2016-01-19)

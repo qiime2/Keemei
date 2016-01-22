@@ -7,12 +7,17 @@ var Color = {
 };
 
 function resetSheetView_(sheet) {
-  var range = sheet.getDataRange();
+  // Not using sheet.getDataRange() because the entire sheet needs to be reset,
+  // not just the part that has content (in case data range is smaller than
+  // previous rendering).
+  var range = sheet.getRange(1, 1, sheet.getMaxRows(), sheet.getMaxColumns());
   range.setBackground(Color.RESET);
   range.clearNote();
 };
 
 function renderSheetView_(sheet, report) {
+  resetSheetView_(sheet);
+
   var range = sheet.getDataRange();
   var numRows = range.getNumRows();
   var numColumns = range.getNumColumns();

@@ -20,4 +20,4 @@ Keemei was developed by Jai Ram Rideout ([@jairideout](https://github.com/jairid
 
 ## Citation
 
-A paper describing Keemei has been submitted to PeerJ and is [currently available as a preprint](https://peerj.com/preprints/1670/).
+A paper describing Keemei has been submitted to [GigaScience](http://www.gigasciencejournal.com/). A preprint is [currently available from PeerJ](https://peerj.com/preprints/1670/).

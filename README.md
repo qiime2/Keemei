@@ -8,6 +8,10 @@ Keemei (canonically pronounced *key may*) is an open source [Google Sheets](http
 
 To get started using Keemei, visit [keemei.qiime.org](http://keemei.qiime.org).
 
+## Citation
+
+A manuscript describing Keemei has been submitted to [GigaScience](http://www.gigasciencejournal.com/). A preprint is [currently available from PeerJ](https://peerj.com/preprints/1670/).
+
 ## Licensing
 
 Keemei is available under the new BSD license. See [LICENSE](LICENSE) for Keemei's license.
@@ -17,7 +21,3 @@ Keemei uses and distributes [Moment.js](http://momentjs.com/), available under t
 ## Credits
 
 Keemei was developed by Jai Ram Rideout ([@jairideout](https://github.com/jairideout)) in the [Caporaso Lab](http://caporasolab.us). See the full list of Keemei's contributors [here](https://github.com/biocore/Keemei/graphs/contributors). Keemei’s logo was created by John Chase ([@johnchase](https://github.com/johnchase)).
-
-## Citation
-
-A paper describing Keemei has been submitted to [GigaScience](http://www.gigasciencejournal.com/). A preprint is [currently available from PeerJ](https://peerj.com/preprints/1670/).

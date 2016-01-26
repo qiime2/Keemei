@@ -2,6 +2,11 @@
 
 **Note on versioning:** the version numbers used here match the version numbers displayed to users in the Chrome Web Store. Sometimes there are gaps between release versions (e.g., version 2 jumps to version 5). This happens because each separate upload of Keemei to the web store increments the version number, and sometimes multiple uploads are necessary before a release is finalized (e.g., if the release is reviewed by an add-ons advisor and updates are required before it can go public). Therefore, the version numbering used here in the changelog and tagged GitHub releases will match the public release version displayed in the web store.
 
+## Development version
+
+### Miscellaneous
+* Link to [PeerJ preprint](https://peerj.com/preprints/1670/) from website, "About" dialog, and readme ([#67](https://github.com/biocore/Keemei/issues/67))
+
 ## Version 7 (2016-01-22)
 
 Minor beta release with a couple minor bug fixes / improvements.

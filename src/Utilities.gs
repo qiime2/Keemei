@@ -9,7 +9,7 @@ function isNumeric_(n) {
 };
 
 // from http://stackoverflow.com/a/6454237/3776794
-function between(x, min, max) {
+function between_(x, min, max) {
   return x >= min && x <= max;
 };
 

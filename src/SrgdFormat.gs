@@ -71,12 +71,12 @@ function getSrgdFormatSpec_(sheetData) {
             args: []
           }
         ],
-        "X": getProjectedCoordinateValidators("X"),
-        "Y": getProjectedCoordinateValidators("Y"),
+        "X": getProjectedCoordinateValidators_("X"),
+        "Y": getProjectedCoordinateValidators_("Y"),
         "Date_Time": [
           {
-            validator: findInvalidSrgdDateTimeFields_,
-            args: []
+            validator: findInvalidDateTimes_,
+            args: [moment.ISO_8601, "ISO 8601"]
           },
           {
             validator: findLeadingTrailingWhitespace_,
@@ -88,7 +88,7 @@ function getSrgdFormatSpec_(sheetData) {
   };
 };
 
-function getProjectedCoordinateValidators(field) {
+function getProjectedCoordinateValidators_(field) {
   return [
     {
       validator: findOutOfRange_,
@@ -162,26 +162,4 @@ function findMissingSrgdFields_(valueToPositions, position) {
 
 function isLocusField_(value) {
   return startsWith_(value, "L_") && value.substring(2).length > 0;
-};
-
-function findInvalidSrgdDateTimeFields_(valueToPositions) {
-  var invalidCells = {};
-  var message = ["Must be a valid date/time in ISO 8601 format"];
-
-  for (var value in valueToPositions) {
-    // moment(..., true) indicates strict parsing.
-    if (valueToPositions.hasOwnProperty(value) &&
-        (value.length > 0) &&
-        !moment(value, moment.ISO_8601, true).isValid()) {
-      var positions = valueToPositions[value];
-      for (var i = 0; i < positions.length; i++) {
-        invalidCells[getA1Notation_(positions[i])] = {
-          "position": positions[i],
-          "errors": [message]
-        };
-      }
-    }
-  }
-
-  return invalidCells;
 };

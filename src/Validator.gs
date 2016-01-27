@@ -82,7 +82,7 @@ function findOutOfRange_(valueToPositions, min, max, label) {
       if (!isNumeric_(value)) {
         errors.push(notANumberMessage);
       }
-      else if (!between(parseFloat(value), min, max)) {
+      else if (!between_(parseFloat(value), min, max)) {
         errors.push(outOfRangeMessage);
       }
 
@@ -102,24 +102,49 @@ function findOutOfRange_(valueToPositions, min, max, label) {
   return invalidCells;
 };
 
-function findMissingValues_(valueToPositions, requiredValues, label, position) {
+function findNegativeIntegers_(valueToPositions, label) {
+  var invalidCells = {};
+  var message = [Utilities.formatString("%s must be a nonnegative integer", label)];
+
+  for (var value in valueToPositions) {
+    if (valueToPositions.hasOwnProperty(value) &&
+        (value.match(/^\d+$/g) === null)) {
+      var positions = valueToPositions[value];
+
+      for (var i = 0; i < positions.length; i++) {
+        invalidCells[getA1Notation_(positions[i])] = {
+          "position": positions[i],
+          "errors": [message]
+        };
+      }
+    }
+  }
+
+  return invalidCells;
+};
+
+function findMissingValues_(valueToPositions, requiredValues, errorType, label, position, messageSuffix) {
   var invalidCells = {};
 
   var missingValues = [];
-  for (var requiredValue in requiredValues) {
-    if (requiredValues.hasOwnProperty(requiredValue)) {
-      if (!valueToPositions.hasOwnProperty(requiredValue)) {
-        missingValues.push(requiredValue);
-      }
+  for (var i = 0; i < requiredValues.length; i++) {
+    var requiredValue = requiredValues[i];
+    if (!valueToPositions.hasOwnProperty(requiredValue)) {
+      missingValues.push(requiredValue);
     }
   }
 
   if (missingValues.length > 0) {
     var message = [Utilities.formatString("Missing required %s: %s", label, missingValues.join(", "))];
-    invalidCells[getA1Notation_(position)] = {
-      "position": position,
-      "errors": [message]
+    if (messageSuffix) {
+      message.push(messageSuffix);
+    }
+
+    var invalidCell = {
+      "position": position
     };
+    invalidCell[errorType] = [message];
+    invalidCells[getA1Notation_(position)] = invalidCell;
   }
 
   return invalidCells;
@@ -186,6 +211,48 @@ function findInvalidCharacters_(valueToPositions, regex, errorType, label, messa
           invalidCell[errorType] = [message];
           invalidCells[getA1Notation_(positions[i])] = invalidCell;
         }
+      }
+    }
+  }
+
+  return invalidCells;
+};
+
+function findInvalidValues_(valueToPositions, validValues, label) {
+  var invalidCells = {};
+  var message = [Utilities.formatString("%s must be one of the following values: %s", label, Object.keys(validValues).join(", "))];
+
+  for (var value in valueToPositions) {
+    if (valueToPositions.hasOwnProperty(value) &&
+        !validValues.hasOwnProperty(value)) {
+      var positions = valueToPositions[value];
+      for (var i = 0; i < positions.length; i++) {
+        invalidCells[getA1Notation_(positions[i])] = {
+          "position": positions[i],
+          "errors": [message]
+        };
+      }
+    }
+  }
+
+  return invalidCells;
+};
+
+function findInvalidDateTimes_(valueToPositions, format, formatDescription) {
+  var invalidCells = {};
+  var message = [Utilities.formatString("Must be a valid date/time in %s format", formatDescription)];
+
+  for (var value in valueToPositions) {
+    // moment(..., true) indicates strict parsing.
+    if (valueToPositions.hasOwnProperty(value) &&
+        (value.length > 0) &&
+        !moment(value, format, true).isValid()) {
+      var positions = valueToPositions[value];
+      for (var i = 0; i < positions.length; i++) {
+        invalidCells[getA1Notation_(positions[i])] = {
+          "position": positions[i],
+          "errors": [message]
+        };
       }
     }
   }

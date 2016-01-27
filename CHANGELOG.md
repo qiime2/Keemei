@@ -4,6 +4,9 @@
 
 ## Development version
 
+### Features
+* Added **experimental** support for validating [Qiita sample template files](https://qiita.ucsd.edu/static/doc/html/tutorials/prepare-templates.html#sample-template) ([#68](https://github.com/biocore/Keemei/issues/68))
+
 ### Miscellaneous
 * Link to [PeerJ preprint](https://peerj.com/preprints/1670/) from website, "About" dialog, and readme ([#67](https://github.com/biocore/Keemei/issues/67))
 

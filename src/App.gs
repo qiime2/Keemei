@@ -6,6 +6,8 @@ function onOpen(e) {
   SpreadsheetApp.getUi().createAddonMenu()
       .addItem("Validate QIIME mapping file", "validateQiime")
       .addItem("Validate SRGD file", "validateSrgd")
+      .addItem("Validate Qiita sample template (experimental)", "validateQiitaSampleTemplate")
+      .addSeparator()
       .addItem("Clear validation status", "clear")
       .addItem("About", "about")
       .addToUi();
@@ -17,6 +19,10 @@ function validateQiime() {
 
 function validateSrgd() {
   return validate_(getSrgdFormatSpec_);
+};
+
+function validateQiitaSampleTemplate() {
+  return validate_(getQiitaSampleTemplateFormatSpec_);
 };
 
 function clear() {

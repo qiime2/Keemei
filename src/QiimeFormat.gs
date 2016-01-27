@@ -13,7 +13,7 @@ function getQiimeFormatSpec_(sheetData) {
     headerValidation: [
       {
         validator: findMissingValues_,
-        args: [requiredHeaders, "columns", [0, 0]]
+        args: [Object.keys(requiredHeaders), "errors", "columns", [0, 0]]
       },
       {
         validator: findDuplicates_,
@@ -95,14 +95,14 @@ function getQiimeFormatSpec_(sheetData) {
             args: []
           }
         ],
-        "LinkerPrimerSequence": getPrimerValidators(),
-        "ReversePrimer": getPrimerValidators()
+        "LinkerPrimerSequence": getPrimerValidators_(),
+        "ReversePrimer": getPrimerValidators_()
       }
     }
   };
 };
 
-function getPrimerValidators() {
+function getPrimerValidators_() {
   return [
     {
       // Check against IUPAC DNA characters (case-insensitive). Allow commas

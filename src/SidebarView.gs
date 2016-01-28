@@ -30,6 +30,7 @@ function renderSidebarView_(sheet, report) {
       errorCount: errorCount,
       warningCount: warningCount
     },
+    maxCellDisplay: 250,
     cellOrder: cellOrder,
     validationResults: validationResults
   };
@@ -37,6 +38,7 @@ function renderSidebarView_(sheet, report) {
   SpreadsheetApp.getUi().showSidebar(sidebar.evaluate()
       .setSandboxMode(HtmlService.SandboxMode.IFRAME)
       .setTitle("Keemei validation report"));
+  SpreadsheetApp.flush();
 };
 
 function focus(sheetId, a1) {

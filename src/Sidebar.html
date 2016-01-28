@@ -21,8 +21,14 @@
       </fieldset>
       <fieldset>
         <legend>Invalid cells</legend>
+        <? var displayCellCount = data.cellOrder.length;
+           if (displayCellCount > data.maxCellDisplay) {
+             displayCellCount = data.maxCellDisplay; ?>
+             Displaying only the first <?= data.maxCellDisplay ?> invalid cells. Try fixing some cells and rerunning Keemei.
+             <br/><br/>
+           <? } ?>
         <div id="accordion">
-          <? for (var cellIdx = 0; cellIdx < data.cellOrder.length; cellIdx++) {
+          <? for (var cellIdx = 0; cellIdx < displayCellCount; cellIdx++) {
               var a1 = data.cellOrder[cellIdx];
               var cellResults = data.validationResults[a1]; ?>
               <h3>

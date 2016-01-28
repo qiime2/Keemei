@@ -13,6 +13,7 @@ function resetSheetView_(sheet) {
   var range = sheet.getRange(1, 1, sheet.getMaxRows(), sheet.getMaxColumns());
   range.setBackground(Color.RESET);
   range.clearNote();
+  SpreadsheetApp.flush();
 };
 
 function renderSheetView_(sheet, report) {
@@ -51,6 +52,7 @@ function renderSheetView_(sheet, report) {
 
   range.setBackgrounds(state.colors);
   range.setNotes(state.notes);
+  SpreadsheetApp.flush();
 };
 
 function initializeState_(numRows, numColumns) {

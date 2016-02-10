@@ -4,6 +4,9 @@
 
 ## Development version
 
+### Bug fixes
+* Fixed minor Chrome CSS issue that caused parts of the sidebar to not render as intended
+
 ## Version 9 (2016-01-28)
 
 ### Bug fixes

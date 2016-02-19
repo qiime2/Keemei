@@ -77,6 +77,10 @@
       </div>
     <? } ?>
     <div class="block">
+      <? var plural = data.runtime.cellCount == 1 ? "" : "s"; ?>
+      Validated <b><?= data.runtime.cellCount ?></b> cell<?= plural ?> in <b><?= data.runtime.seconds ?></b> seconds.
+    </div>
+    <div class="block">
       <button class="close-button">Close</button>
     </div>
     </div>

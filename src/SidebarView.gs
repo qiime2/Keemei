@@ -28,11 +28,15 @@ function renderSidebarView_(sheet, report) {
     summary: {
       invalidCount: cellOrder.length,
       errorCount: errorCount,
-      warningCount: warningCount
+      warningCount: warningCount,
     },
     maxCellDisplay: 250,
     cellOrder: cellOrder,
-    validationResults: validationResults
+    validationResults: validationResults,
+    runtime: {
+      cellCount: report.cellCount,
+      seconds: report.runtime / 1000
+    }
   };
 
   SpreadsheetApp.getUi().showSidebar(sidebar.evaluate()

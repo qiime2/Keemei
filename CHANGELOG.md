@@ -4,6 +4,9 @@
 
 ## Development version
 
+### Features
+* Added number of cells validated and runtime to sidebar report ([#69](https://github.com/biocore/Keemei/issues/69))
+
 ## Version 10 (2016-02-10)
 
 Minor beta release with a bug fix.

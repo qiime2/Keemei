@@ -1,6 +1,9 @@
 function validate_(formatSpecFunction) {
+  var startTime = Date.now();
+
   var sheet = SpreadsheetApp.getActiveSheet();
   var sheetData = sheet.getDataRange().getDisplayValues();
+  var cellCount = sheetData.length * sheetData[0].length;
 
   var formatSpec = formatSpecFunction(sheetData);
 
@@ -9,7 +12,9 @@ function validate_(formatSpecFunction) {
     validationResults: mergeValidationResults_([
       validateHeader_(sheetData, formatSpec),
       validateColumns_(sheetData, formatSpec)
-    ])
+    ]),
+    cellCount: cellCount,
+    runtime: Date.now() - startTime
   };
 
   renderSheetView_(sheet, report);

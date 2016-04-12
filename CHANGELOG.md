@@ -6,6 +6,9 @@
 
 ### Features
 * Added number of cells validated and runtime to sidebar report ([#69](https://github.com/biocore/Keemei/issues/69))
+* The error messages identifying duplicate cell locations (e.g., duplicate sample identifiers and barcode sequences) now only display the first 10 duplicates. This change results in error messages that are shorter and easier to digest for users and avoids some rendering performance degradation.
+* Empty cells are now ignored when identifying duplicate cells, leading to fewer overlapping error messages.
+* Identifying barcode length mismatches now ignores empty cells and only considers barcode length after trimming leading/trailing whitespace characters.
 
 ## Version 10 (2016-02-10)
 

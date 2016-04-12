@@ -3,7 +3,9 @@ function findDuplicates_(valueToPositions, note, ignoreFunction) {
 
   var invalidCells = {};
   for (var value in valueToPositions) {
-    if (valueToPositions.hasOwnProperty(value) && !ignoreFunction(value)) {
+    if (valueToPositions.hasOwnProperty(value) &&
+        (value.length > 0) &&
+        !ignoreFunction(value)) {
       var positions = valueToPositions[value];
 
       if (positions.length > 1) {
@@ -11,7 +13,17 @@ function findDuplicates_(valueToPositions, note, ignoreFunction) {
         for (var i = 0; i < positions.length; i++) {
           duplicates.push(getA1Notation_(positions[i]));
         }
-        var message = [Utilities.formatString("%s. Duplicates in %s", note, duplicates.join(", "))];
+
+        var maxDuplicateLocations = 10;
+        if (duplicates.length <= maxDuplicateLocations) {
+          var duplicateLocationsMessage = duplicates.join(", ");
+        }
+        else {
+          var duplicateLocationsMessage = Utilities.formatString("%s, ... (%d more)",
+                                                                 duplicates.slice(0, maxDuplicateLocations).join(", "),
+                                                                 duplicates.length - maxDuplicateLocations);
+        }
+        var message = [Utilities.formatString("%s. Duplicates in %s", note, duplicateLocationsMessage)];
 
         for (var i = 0; i < positions.length; i++) {
           invalidCells[duplicates[i]] = {
@@ -31,16 +43,17 @@ function findUnequalLengths_(valueToPositions, label) {
   var message = [Utilities.formatString("%s length does not match the others", label)];
   var lengthMode = lengthMode_(valueToPositions);
   for (var value in valueToPositions) {
-    if (valueToPositions.hasOwnProperty(value)) {
-      if (value.length != lengthMode) {
-        var positions = valueToPositions[value];
+    var trimmedValue = value.trim();
+    if (valueToPositions.hasOwnProperty(value) &&
+        (trimmedValue.length > 0) &&
+        (trimmedValue.length != lengthMode)) {
+      var positions = valueToPositions[value];
 
-        for (var i = 0; i < positions.length; i++) {
-          invalidCells[getA1Notation_(positions[i])] = {
-            "position": positions[i],
-            "warnings": [message]
-          };
-        }
+      for (var i = 0; i < positions.length; i++) {
+        invalidCells[getA1Notation_(positions[i])] = {
+          "position": positions[i],
+          "warnings": [message]
+        };
       }
     }
   }
@@ -55,15 +68,17 @@ function lengthMode_(valueToPositions) {
   var mode = null;
   var count = 0;
   for (var value in valueToPositions) {
-    if (valueToPositions.hasOwnProperty(value)) {
-      if (!modeMap.hasOwnProperty(value.length)) {
-        modeMap[value.length] = 0;
+    var trimmedValue = value.trim();
+    if (valueToPositions.hasOwnProperty(value) &&
+        (trimmedValue.length > 0)) {
+      if (!modeMap.hasOwnProperty(trimmedValue.length)) {
+        modeMap[trimmedValue.length] = 0;
       }
-      modeMap[value.length] += valueToPositions[value].length;
+      modeMap[trimmedValue.length] += valueToPositions[value].length;
 
-      if (modeMap[value.length] > count) {
-        mode = value.length;
-        count = modeMap[value.length];
+      if (modeMap[trimmedValue.length] > count) {
+        mode = trimmedValue.length;
+        count = modeMap[trimmedValue.length];
       }
     }
   }

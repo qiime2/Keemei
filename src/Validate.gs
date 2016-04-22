@@ -1,7 +1,7 @@
-function validate_(formatSpecFunction) {
+function validate_(formatSpecFunction, sheet) {
   var startTime = Date.now();
 
-  var sheet = SpreadsheetApp.getActiveSheet();
+  sheet = (typeof sheet === 'undefined') ? SpreadsheetApp.getActiveSheet() : sheet;
   var sheetData = sheet.getDataRange().getDisplayValues();
   var cellCount = sheetData.length * sheetData[0].length;
 
@@ -19,6 +19,7 @@ function validate_(formatSpecFunction) {
 
   renderSheetView_(sheet, report);
   renderSidebarView_(sheet, report);
+  return report;
 };
 
 function validateHeader_(sheetData, formatSpec) {

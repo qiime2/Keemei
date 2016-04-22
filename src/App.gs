@@ -14,15 +14,15 @@ function onOpen(e) {
 };
 
 function validateQiime() {
-  return validate_(getQiimeFormatSpec_);
+  validate_(getQiimeFormatSpec_);
 };
 
 function validateSrgd() {
-  return validate_(getSrgdFormatSpec_);
+  validate_(getSrgdFormatSpec_);
 };
 
 function validateQiitaSampleTemplate() {
-  return validate_(getQiitaSampleTemplateFormatSpec_);
+  validate_(getQiitaSampleTemplateFormatSpec_);
 };
 
 function clear() {

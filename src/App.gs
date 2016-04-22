@@ -10,6 +10,11 @@ function onOpen(e) {
       .addSeparator()
       .addItem("Clear validation status", "clear")
       .addItem("About", "about")
+      .addSeparator()
+      .addSubMenu(SpreadsheetApp.getUi().createMenu("Developer tools")
+          .addItem("Create simulated QIIME mapping file dataset", "createSimulatedData")
+          .addItem("Run benchmarks: dataset size and error rate", "runDatasetSizeBenchmarks")
+          .addItem("Run benchmarks: rule size", "runRuleSizeBenchmarks"))
       .addToUi();
 };
 

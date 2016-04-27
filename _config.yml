@@ -33,3 +33,6 @@ colors:
   purple:    '#5F003A'
   orange:    '#FFC000'
   turquoise: '#3FFFE0'
+
+kramdown:
+  auto_ids:  false

@@ -10,7 +10,13 @@ To get started using Keemei, visit [keemei.qiime.org](http://keemei.qiime.org).
 
 ## Citation
 
-A manuscript describing Keemei has been submitted to [GigaScience](http://www.gigasciencejournal.com/). A preprint is [currently available from PeerJ](https://peerj.com/preprints/1670/).
+If you use Keemei for any published research, please include the following citation:
+
+> **Keemei: cloud-based validation of tabular bioinformatics file formats in Google Sheets.**  
+> Rideout JR, Chase JH, Bolyen E, Ackermann G, González A, Knight R, Caporaso JG.  
+> GigaScience. 2016;5:27. http://dx.doi.org/10.1186/s13742-016-0133-6
+
+Find the Keemei paper [here](http://dx.doi.org/10.1186/s13742-016-0133-6).
 
 ## Licensing
 

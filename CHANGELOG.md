@@ -2,6 +2,13 @@
 
 **Note on versioning:** the version numbers used here match the version numbers displayed to users in the Chrome Web Store. Sometimes there are gaps between release versions (e.g., version 2 jumps to version 5). This happens because each separate upload of Keemei to the web store increments the version number, and sometimes multiple uploads are necessary before a release is finalized (e.g., if the release is reviewed by an add-ons advisor and updates are required before it can go public). Therefore, the version numbering used here in the changelog and tagged GitHub releases will match the public release version displayed in the web store.
 
+## Version 12 (2016-06-17)
+
+Minor beta release with [Keemei paper](http://dx.doi.org/10.1186/s13742-016-0133-6) citation information.
+
+### Miscellaneous
+* Added [Keemei paper](http://dx.doi.org/10.1186/s13742-016-0133-6) citation information to website, "About" dialog, and readme
+
 ## Version 11 (2016-04-22)
 
 Minor beta release with improved validation reporting and developer tools.

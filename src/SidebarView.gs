@@ -68,5 +68,14 @@ function focus(sheetId, a1) {
     }
     activeSheet = ss.setActiveSheet(sheet);
   }
+
+  /*
+  Select any other cell before selecting the real cell.
+  This is a hack for: https://github.com/biocore/Keemei/issues/65
+  Focus does not scroll if cell is already active.
+  */
+  incrementLastDigit = parseInt(a1[a1.length-1]) + 1
+  anyOtherCell = a1.replace(/.$/, incrementLastDigit.toString())
+  activeSheet.setActiveSelection(anyOtherCell);
   activeSheet.setActiveSelection(a1);
 };

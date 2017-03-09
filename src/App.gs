@@ -37,7 +37,6 @@ function clear() {
 function about() {
   var htmlOutput = HtmlService
      .createHtmlOutputFromFile("About")
-     .setSandboxMode(HtmlService.SandboxMode.IFRAME)
      .setWidth(650)
      .setHeight(400);
   SpreadsheetApp.getUi().showModalDialog(htmlOutput, "About Keemei");

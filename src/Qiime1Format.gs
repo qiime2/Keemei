@@ -1,4 +1,4 @@
-function getQiimeFormatSpec_(sheetData) {
+function getQiime1FormatSpec_(sheetData) {
   var requiredHeaders = {
     "#SampleID": [0, "first"],
     "BarcodeSequence": [1, "second"],
@@ -7,9 +7,9 @@ function getQiimeFormatSpec_(sheetData) {
   };
 
   return {
-    format: "QIIME mapping file",
+    format: "QIIME 1 mapping file",
     headerRowIdx: 0,
-    dataStartRowIdx: getQiimeDataStartRowIdx_(sheetData),
+    dataStartRowIdx: getQiime1DataStartRowIdx_(sheetData),
     headerValidation: [
       {
         validator: findMissingValues_,
@@ -22,11 +22,11 @@ function getQiimeFormatSpec_(sheetData) {
       {
         // #SampleID is an invalid column header name, so we'll only check header names
         // if they aren't required headers. Assume the required header names are valid.
-        validator: findInvalidQiimeColumns_,
+        validator: findInvalidQiime1Columns_,
         args: [requiredHeaders]
       },
       {
-        validator: findMisplacedQiimeColumns_,
+        validator: findMisplacedQiime1Columns_,
         args: [requiredHeaders]
       },
       {
@@ -121,7 +121,7 @@ function getPrimerValidators_() {
   ];
 };
 
-function getQiimeDataStartRowIdx_(sheetData) {
+function getQiime1DataStartRowIdx_(sheetData) {
   for (var i = 1; i < sheetData.length; i++) {
     if (!startsWith_(sheetData[i][0], "#")) {
       break;
@@ -130,7 +130,7 @@ function getQiimeDataStartRowIdx_(sheetData) {
   return i;
 };
 
-function findInvalidQiimeColumns_(valueToPositions, ignoredValues) {
+function findInvalidQiime1Columns_(valueToPositions, ignoredValues) {
   var invalidCells = {};
   var message = [
     Utilities.formatString("Invalid column header name. Only alphanumeric and underscore characters are allowed. The first character must be a letter.")
@@ -153,7 +153,7 @@ function findInvalidQiimeColumns_(valueToPositions, ignoredValues) {
   return invalidCells;
 };
 
-function findMisplacedQiimeColumns_(valueToPositions, requiredHeaders) {
+function findMisplacedQiime1Columns_(valueToPositions, requiredHeaders) {
   var invalidCells = {};
   for (var value in valueToPositions) {
     if (valueToPositions.hasOwnProperty(value)) {

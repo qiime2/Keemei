@@ -181,7 +181,7 @@ var ERROR_TRANSFORMS = [
 
   /*
    * Substitute first character with invalid character.
-   * $ is invalid across all QIIME mapping file columns.
+   * $ is invalid across all QIIME 1 mapping file columns.
    * We replace a character instead of appending to keep
    * barcodes the same length, otherwise additional cells
    * could be marked invalid in rare cases. Replacing a

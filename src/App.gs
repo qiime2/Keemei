@@ -4,7 +4,8 @@ function onInstall(e) {
 
 function onOpen(e) {
   SpreadsheetApp.getUi().createAddonMenu()
-      .addItem("Validate QIIME mapping file", "validateQiime")
+      .addItem("Validate QIIME 1 mapping file", "validateQiime1")
+      .addItem("Validate QIIME 2 mapping file", "validateQiime2")
       .addItem("Validate SRGD file", "validateSrgd")
       .addItem("Validate Qiita sample template (experimental)", "validateQiitaSampleTemplate")
       .addSeparator()
@@ -12,14 +13,18 @@ function onOpen(e) {
       .addItem("About", "about")
       .addSeparator()
       .addSubMenu(SpreadsheetApp.getUi().createMenu("Developer tools")
-          .addItem("Create simulated QIIME mapping file dataset", "createSimulatedData")
+          .addItem("Create simulated QIIME 1 mapping file dataset", "createSimulatedData")
           .addItem("Run benchmarks: dataset size and error rate", "runDatasetSizeBenchmarks")
           .addItem("Run benchmarks: rule size", "runRuleSizeBenchmarks"))
       .addToUi();
 };
 
-function validateQiime() {
-  validate_(getQiimeFormatSpec_);
+function validateQiime1() {
+  validate_(getQiime1FormatSpec_);
+};
+
+function validateQiime2() {
+  validate_(getQiime2FormatSpec_);
 };
 
 function validateSrgd() {

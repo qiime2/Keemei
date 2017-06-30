@@ -7,6 +7,10 @@ function validate_(formatSpecFunction, sheet) {
 
   var formatSpec = formatSpecFunction(sheetData);
 
+  if (!formatSpec) {
+    return {};
+  }
+
   var report = {
     format: formatSpec.format,
     validationResults: mergeValidationResults_([

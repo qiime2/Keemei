@@ -2,6 +2,13 @@
 
 **Note on versioning:** the version numbers used here match the version numbers displayed to users in the Chrome Web Store. Sometimes there are gaps between release versions (e.g., version 2 jumps to version 5). This happens because each separate upload of Keemei to the web store increments the version number, and sometimes multiple uploads are necessary before a release is finalized (e.g., if the release is reviewed by an add-ons advisor and updates are required before it can go public). Therefore, the version numbering used here in the changelog and tagged GitHub releases will match the public release version displayed in the web store.
 
+## Version 13 (2017-06-28)
+
+This release adds **experimental** support for validating [QIIME 2](https://qiime2.org) mapping files.
+
+### Features
+* Added **experimental** support for validating [QIIME 2 mapping files](https://docs.qiime2.org/2017.6/tutorials/metadata/#metadata-from-a-text-file) ([#79](https://github.com/biocore/Keemei/issues/79))
+
 ## Version 12 (2016-06-17)
 
 Minor beta release with [Keemei paper](http://dx.doi.org/10.1186/s13742-016-0133-6) citation information.

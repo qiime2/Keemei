@@ -83,7 +83,7 @@ function runDatasetSizeBenchmarks() {
       var runtime = row[j + 1];
       if (runtime === "") {
         // Depends on core Keemei API.
-        var report = validate_(getQiimeFormatSpec_, sheet);
+        var report = validate_(getQiime1FormatSpec_, sheet);
 
         var numInvalidCells = Object.keys(report.validationResults).length;
         var expectedNumInvalidCells = (parseInt(rowCount, 10) * numColumns) * errorProportion;

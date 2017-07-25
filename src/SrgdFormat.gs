@@ -1,8 +1,7 @@
 function getSrgdFormatSpec_(sheetData) {
   return {
     format: "SRGD",
-    headerRowIdx: 0,
-    dataStartRowIdx: 1,
+    ignoredRowIdxs: [],
     headerValidation: [
       {
         validator: findMissingSrgdFields_,

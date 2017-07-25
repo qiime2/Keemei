@@ -5,8 +5,7 @@ function getQiitaSampleTemplateFormatSpec_(sheetData) {
 
   return {
     format: "Qiita sample template",
-    headerRowIdx: 0,
-    dataStartRowIdx: 1,
+    ignoredRowIdxs: [],
     headerValidation: [
       {
         validator: findMissingValues_,

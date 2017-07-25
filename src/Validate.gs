@@ -7,10 +7,6 @@ function validate_(formatSpecFunction, sheet) {
 
   var formatSpec = formatSpecFunction(sheetData);
 
-  if (!formatSpec) {
-    return {};
-  }
-
   var report = {
     format: formatSpec.format,
     validationResults: mergeValidationResults_([
@@ -27,8 +23,8 @@ function validate_(formatSpecFunction, sheet) {
 };
 
 function validateHeader_(sheetData, formatSpec) {
-  var headerRowIdx = formatSpec.headerRowIdx;
-  var valueToPositions = getValueToPositionsMapping_(sheetData, headerRowIdx, 0, 1, sheetData[0].length);
+  var headerRowIdx = getHeaderRowIdx_(sheetData, formatSpec.ignoredRowIdxs);
+  var valueToPositions = getValueToPositionsMapping_(sheetData, headerRowIdx, 0, 1, sheetData[0].length, formatSpec.ignoredRowIdxs);
 
   var validationResults = [];
   for (var i = 0; i < formatSpec.headerValidation.length; i++) {
@@ -42,20 +38,20 @@ function validateHeader_(sheetData, formatSpec) {
 };
 
 function validateColumns_(sheetData, formatSpec) {
-  var headerRowIdx = formatSpec.headerRowIdx;
-  var startRowIdx = formatSpec.dataStartRowIdx;
+  var headerRowIdx = getHeaderRowIdx_(sheetData, formatSpec.ignoredRowIdxs);
+  var startRowIdx = headerRowIdx + 1;
   var endRowIdx = sheetData.length - 1;
   var numRows = endRowIdx - startRowIdx + 1;
 
   if (startRowIdx > endRowIdx) {
-    // no metadata, only header
+    // no data, only header
     return {};
   }
 
   var headers = sheetData[headerRowIdx];
   var validationResults = [];
   for (var columnIdx = 0; columnIdx < headers.length; columnIdx++) {
-    var valueToPositions = getValueToPositionsMapping_(sheetData, startRowIdx, columnIdx, numRows, 1);
+    var valueToPositions = getValueToPositionsMapping_(sheetData, startRowIdx, columnIdx, numRows, 1, formatSpec.ignoredRowIdxs);
 
     var header = headers[columnIdx];
     var columnValidators = formatSpec.columnValidation["default"];
@@ -74,11 +70,27 @@ function validateColumns_(sheetData, formatSpec) {
   return mergeValidationResults_(validationResults);
 };
 
-function getValueToPositionsMapping_(sheetData, rowIdx, columnIdx, numRows, numColumns) {
+function getHeaderRowIdx_(sheetData, ignoredRowIdxs) {
+  for (var idx = 0; idx < sheetData.length; idx++) {
+    if (ignoredRowIdxs[idx]) {
+      continue;
+    }
+    return idx;
+  }
+  throw new Error("Failed to find header row. All rows in the sheet are being " +
+                  "ignored according to the file format's validation rules.");
+};
+
+function getValueToPositionsMapping_(sheetData, rowIdx, columnIdx, numRows, numColumns, ignoredRowIdxs) {
   var valueToPositions = {};
   for (var i = 0; i < numRows; i++) {
+    var currRowIdx = rowIdx + i;
+
+    if (ignoredRowIdxs[currRowIdx]) {
+      continue;
+    }
+
     for (var j = 0; j < numColumns; j++) {
-      var currRowIdx = rowIdx + i;
       var currColumnIdx = columnIdx + j;
       var position = [currRowIdx, currColumnIdx];
 

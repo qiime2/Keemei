@@ -8,8 +8,7 @@ function getQiime1FormatSpec_(sheetData) {
 
   return {
     format: "QIIME 1 mapping file",
-    headerRowIdx: 0,
-    dataStartRowIdx: getQiime1DataStartRowIdx_(sheetData),
+    ignoredRowIdxs: getQiime1IgnoredRowIdxs_(sheetData),
     headerValidation: [
       {
         validator: findMissingValues_,
@@ -121,13 +120,17 @@ function getPrimerValidators_() {
   ];
 };
 
-function getQiime1DataStartRowIdx_(sheetData) {
+function getQiime1IgnoredRowIdxs_(sheetData) {
+  var ignored = new Array(sheetData.length);
   for (var i = 1; i < sheetData.length; i++) {
-    if (!startsWith_(sheetData[i][0], "#")) {
+    if (startsWith_(sheetData[i][0], "#")) {
+      ignored[i] = true;
+    }
+    else {
       break;
     }
   }
-  return i;
+  return ignored;
 };
 
 function findInvalidQiime1Columns_(valueToPositions, ignoredValues) {

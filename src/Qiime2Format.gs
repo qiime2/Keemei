@@ -1,25 +1,9 @@
 function getQiime2FormatSpec_(sheetData) {
-  // TODO: this isn't the best place to put this type of validation.
-  // There isn't a hook yet to error if there are missing data rows
-  // for a file format, so use an ad-hoc check for now.
-  if (sheetData.length < 2) {
-    var ui = SpreadsheetApp.getUi();
-    ui.alert("Missing data",
-             "This sheet must have at least two rows in order to be validated. " +
-             "The first row contains the header and subsequent rows contain data.",
-             ui.ButtonSet.OK);
-    return null;
-  }
-
   var axisLabelRegex = /[^\/\\*<>?|$]/ig;
 
   var formatSpec = {
     format: "QIIME 2 mapping file",
-
-    // TODO: update when blank lines and comments are supported
-    headerRowIdx: 0,
-    dataStartRowIdx: 1,
-
+    ignoredRowIdxs: getQiime2IgnoredRowIdxs_(sheetData),
     headerValidation: [
       {
         validator: findDuplicates_,
@@ -49,8 +33,7 @@ function getQiime2FormatSpec_(sheetData) {
     }
   };
 
-  // TODO: update when blank lines and comments are supported
-  var idColumnLabel = sheetData[0][0];
+  var idColumnLabel = sheetData[getHeaderRowIdx_(sheetData, formatSpec.ignoredRowIdxs)][0];
 
   formatSpec.columnValidation.columns[idColumnLabel] = [
     {
@@ -72,4 +55,26 @@ function getQiime2FormatSpec_(sheetData) {
   ];
 
   return formatSpec;
+};
+
+function getQiime2IgnoredRowIdxs_(sheetData) {
+  var ignored = new Array(sheetData.length);
+  for (var i = 0; i < sheetData.length; i++) {
+    var row = sheetData[i];
+
+    // Special case for QIIME 1 backwards compatibility.
+    if ((i == 0) && (row[0] === '#SampleID')) {
+      continue;
+    }
+
+    // We can only validate comment lines because it isn't
+    // possible to export a Google Sheet as TSV with blank
+    // lines (i.e. only spaces in the line) -- tab delimiters
+    // are always included in the exported row, so the row
+    // won't be ignored when QIIME 2 loads the file.
+    if (startsWith_(row[0], "#")) {
+      ignored[i] = true;
+    }
+  }
+  return ignored;
 };

@@ -4,10 +4,10 @@ function onInstall(e) {
 
 function onOpen(e) {
   SpreadsheetApp.getUi().createAddonMenu()
+      .addItem("Validate QIIME 2 metadata file", "validateQiime2")
       .addItem("Validate QIIME 1 mapping file", "validateQiime1")
-      .addItem("Validate QIIME 2 mapping file", "validateQiime2")
+      .addItem("Validate Qiita sample information file", "validateQiitaSampleInformationFile")
       .addItem("Validate SRGD file", "validateSrgd")
-      .addItem("Validate Qiita sample template (experimental)", "validateQiitaSampleTemplate")
       .addSeparator()
       .addItem("Clear validation status", "clear")
       .addItem("About", "about")
@@ -31,8 +31,8 @@ function validateSrgd() {
   validate_(getSrgdFormatSpec_);
 };
 
-function validateQiitaSampleTemplate() {
-  validate_(getQiitaSampleTemplateFormatSpec_);
+function validateQiitaSampleInformationFile() {
+  validate_(getQiitaSampleInformationFormatSpec_);
 };
 
 function clear() {

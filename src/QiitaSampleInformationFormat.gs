@@ -1,10 +1,10 @@
-function getQiitaSampleTemplateFormatSpec_(sheetData) {
+function getQiitaSampleInformationFormatSpec_(sheetData) {
   var requiredFields = ["sample_name"];
   var requiredEbiFields = ["collection_timestamp", "physical_specimen_location", "taxon_id", "description", "scientific_name"];
   var requiredCentralizedFields = ["sample_type", "physical_specimen_remaining", "dna_extracted", "latitude", "longitude", "host_subject_id"];
 
   return {
-    format: "Qiita sample template",
+    format: "Qiita sample information",
     ignoredRowIdxs: [],
     headerValidation: [
       {

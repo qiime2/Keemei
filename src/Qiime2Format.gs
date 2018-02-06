@@ -2,7 +2,7 @@ function getQiime2FormatSpec_(sheetData) {
   var axisLabelRegex = /[^\/\\*<>?|$]/ig;
 
   var formatSpec = {
-    format: "QIIME 2 mapping file",
+    format: "QIIME 2 metadata file",
     ignoredRowIdxs: getQiime2IgnoredRowIdxs_(sheetData),
     headerValidation: [
       {

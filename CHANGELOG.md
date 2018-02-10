@@ -2,7 +2,9 @@
 
 **Note on versioning:** the version numbers used here match the version numbers displayed to users in the Chrome Web Store. Sometimes there are gaps between release versions (e.g., version 2 jumps to version 5). This happens because each separate upload of Keemei to the web store increments the version number, and sometimes multiple uploads are necessary before a release is finalized (e.g., if the release is reviewed by an add-ons advisor and updates are required before it can go public). Therefore, the version numbering used here in the changelog and tagged GitHub releases will match the public release version displayed in the web store.
 
-## Development version
+## Version 17 (2018-02-09)
+
+Minor release rebranding Keemei as an official QIIME 2 project.
 
 ### Miscellaneous
 * Rebranded the add-on to QIIME 2. Keemei is now an official QIIME 2 project hosted under the [QIIME 2 GitHub organization](https://github.com/qiime2/)

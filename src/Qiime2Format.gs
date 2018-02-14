@@ -65,6 +65,10 @@ var Q2COLUMNTYPES_ = {
 // Credit: https://stackoverflow.com/a/4703508/3776794
 var NUMERICREGEX_ = /^[-+]?(?:(?:\d*\.\d+)|(?:\d+\.?))(?:[Ee][+-]?\d+)?$/;
 
+// Recommended ID regex based on "Recommendations for Identifiers" in QIIME 2 Metadata file format docs.
+// Tested at https://regexr.com/
+var RECOMMENDEDIDREGEX_ = /^[a-zA-Z0-9.\-]{1,36}$/;
+
 function validateQiime2_() {
   var startTime = Date.now();
 
@@ -311,6 +315,15 @@ function validateQ2Data_(validationResults, sheetData, dataIdx, header, headerId
     }
     else {
       ids[id] = true;
+    }
+
+    // Warn if ID doesn't meet the "recommended identifiers" requirements in the QIIME 2 Metadata file format docs.
+    if (!RECOMMENDEDIDREGEX_.test(id)) {
+      var position = [i, 0];
+      var message = ["ID doesn't meet the recommendations for choosing identifiers described in the QIIME 2 metadata documentation. IDs are recommended to have the following attributes:"];
+      message.push("- IDs should be 36 characters long or less.");
+      message.push("- IDs should contain only ASCII alphanumeric characters (i.e. in the range of [a-z], [A-Z], or [0-9]), the period (.) character, or the dash (-) character.");
+      addCellWarning_(validationResults, position, message);
     }
 
     // Now that the ID is validated, check that the other values in the row can be converted to numbers

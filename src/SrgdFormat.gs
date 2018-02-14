@@ -1,6 +1,6 @@
 function getSrgdFormatSpec_(sheetData) {
   return {
-    format: "SRGD",
+    format: "SRGD file",
     ignoredRowIdxs: [],
     headerValidation: [
       {

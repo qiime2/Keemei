@@ -19,20 +19,20 @@ function onOpen(e) {
       .addToUi();
 };
 
+function validateQiime2() {
+  validateQiime2_();
+};
+
 function validateQiime1() {
   validate_(getQiime1FormatSpec_);
 };
 
-function validateQiime2() {
-  validate_(getQiime2FormatSpec_);
+function validateQiitaSampleInformationFile() {
+  validate_(getQiitaSampleInformationFormatSpec_);
 };
 
 function validateSrgd() {
   validate_(getSrgdFormatSpec_);
-};
-
-function validateQiitaSampleInformationFile() {
-  validate_(getQiitaSampleInformationFormatSpec_);
 };
 
 function clear() {

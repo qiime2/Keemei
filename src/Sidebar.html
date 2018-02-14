@@ -7,12 +7,12 @@
   <body>
     <div class="sidebar">
     <? if (data.summary.invalidCount < 1) { ?>
-      <h1>All's well! Sheet <b><?= data.sheetName ?></b> is in valid <b><?= data.format ?></b> format.</h1>
+      <h1>Good news! Sheet <b><?= data.sheetName ?></b> is a valid <b><?= data.format ?></b>.</h1>
     <? }
     else { ?>
       <div class="block">
       <h1>Validation report for sheet <b><?= data.sheetName ?></b></h1>
-      <span class="gray"><?= data.format ?> format</span>
+      <span class="gray"><?= data.format ?></span>
       <fieldset>
         <legend>Summary</legend>
         <b><?= data.summary.invalidCount ?></b> invalid cells<br/>

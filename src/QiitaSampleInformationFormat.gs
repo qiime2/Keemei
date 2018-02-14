@@ -4,7 +4,7 @@ function getQiitaSampleInformationFormatSpec_(sheetData) {
   var requiredCentralizedFields = ["sample_type", "physical_specimen_remaining", "dna_extracted", "latitude", "longitude", "host_subject_id"];
 
   return {
-    format: "Qiita sample information",
+    format: "Qiita sample information file",
     ignoredRowIdxs: [],
     headerValidation: [
       {

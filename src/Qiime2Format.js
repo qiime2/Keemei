@@ -19,9 +19,6 @@
  * - The code could use some linting and style-checks for consistency.
  *
  * - Consider adding warnings to cells with leading/trailing whitespace.
- *
- * - Consider adding warnings to IDs that don't meet the "recommendations for identifiers"
- *   in the QIIME 2 Metadata format spec.
  */
 
 /**
